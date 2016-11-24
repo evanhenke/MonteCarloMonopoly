@@ -18,8 +18,8 @@ public class MonteCarloMonopoly {
         GameHelper gh = new GameHelper();
 
         int currentPlayerState;
-        int numberOfGames = 1;
-        int numOfRounds = 1;
+        int numberOfGames = 1000;
+        int numOfRounds = 10000;
         int numWinsByOne = 0;
         int ownerID;
         int moneyTransferred;
@@ -31,7 +31,7 @@ public class MonteCarloMonopoly {
         java.util.Date dateStart = new Date();
 
         for (int roundNum = 1; roundNum <= numOfRounds; roundNum++) {
-            System.out.println("-------------------------  Round Number: " + roundNum + "  -------------------------");
+            //System.out.println("-------------------------  Round Number: " + roundNum + "  -------------------------");
             previousRoundNumWinsByOne = numWinsByOne;
 
             playerOne.resetNumPlayerWins();
@@ -43,7 +43,7 @@ public class MonteCarloMonopoly {
             playerFour.setProbabilityToBuy(Math.random()*0.2 + 0.7);
 
             for (int n = 1; n <= numberOfGames; n++) {
-                System.out.println("%%%%%%%%%%  Game Number " + n + " %%%%%%%%%%");
+                //System.out.println("%%%%%%%%%%  Game Number " + n + " %%%%%%%%%%");
                 PlayerArray.add(playerOne);
                 PlayerArray.add(playerTwo);
                 PlayerArray.add(playerThree);
@@ -63,37 +63,37 @@ public class MonteCarloMonopoly {
                 while (PlayerArray.size() > 1) {
                     for (Player player : PlayerArray) {
                         currentPlayer = player;
-                        System.out.println("******Start of player " + player.getPlayerID() + "'s turn ******");
-                        System.out.println("Money: " + player.getMoney() + "  Current State: " + player.getState() + "  Num Properties owned: " + player.getNumPropertiesOwned());
+                        //System.out.println("******Start of player " + player.getPlayerID() + "'s turn ******");
+                        //System.out.println("Money: " + player.getMoney() + "  Current State: " + player.getState() + "  Num Properties owned: " + player.getNumPropertiesOwned());
                         player.move();
-                        System.out.println("Player moved to new state: " + player.getState());
+                        //System.out.println("Player moved to new state: " + player.getState());
                         gh.accountForPlayerPassingGo();
                         currentPlayerState = player.getState();
 
                         if (state.stateIsOwnableAtIndex(currentPlayerState) && player.canAffordProperty()) {
-                            System.out.println(player.getPlayerID() + " is on " + player.getState() + " and it is ownable and player has enough money to purchase it");
+                            //System.out.println(player.getPlayerID() + " is on " + player.getState() + " and it is ownable and player has enough money to purchase it");
                             if (strategy.shouldPlayerBuy(player)) {
                                 gh.propertyPurchasedFromBank(player);
                             }else {
-                                System.out.println("Player " + player.getPlayerID() + " decided not to buy with prob: " + player.getProbabilityToBuy());
+                                //System.out.println("Player " + player.getPlayerID() + " decided not to buy with prob: " + player.getProbabilityToBuy());
                             }
                         } else if (state.stateIsOwnedAtIndex(currentPlayerState)) {
                             ownerID = state.getIsStateOwnedIndexAt(currentPlayerState);
-                            System.out.println(player.getPlayerID() + " has landed on an owned state");
+                            //System.out.println(player.getPlayerID() + " has landed on an owned state");
 
                             moneyTransferred = gh.setAmountOfMoneyToBeTransferred();
                             player.loseAmount(moneyTransferred);
 
                             if (!player.isPlaying()) {
-                                System.out.println("This causes player " + player.getPlayerID() + " to lose, updating owned and ownable arrays:");
+                                //System.out.println("This causes player " + player.getPlayerID() + " to lose, updating owned and ownable arrays:");
                                 state.updateOwnedAndOwnableDueToPlayerLoss(player.getPlayerID());
-                                state.displayOwnedAndOwnableArrays();
+                                //state.displayOwnedAndOwnableArrays();
                             }
 
                             gh.payPlayer(moneyTransferred);
                         }
                     }
-                    System.out.println();
+                    //System.out.println();
 
                     PlayerArray = gh.adjustPlayerArrayInCaseOfPlayerLoss(PlayerArray);
 
@@ -104,15 +104,15 @@ public class MonteCarloMonopoly {
                         state.displayOwnedAndOwnableArrays();
                         System.exit(0);
                     }
-                    System.out.println("Each player has had a turn, new owned and ownable arrarys are: ");
-                    state.displayOwnedAndOwnableArrays();
-                    System.out.println();
+                    //System.out.println("Each player has had a turn, new owned and ownable arrarys are: ");
+                    //state.displayOwnedAndOwnableArrays();
+                    //System.out.println();
                 }
 
                 PlayerArray.clear();
             }
 
-            System.out.println();
+            //System.out.println();
             System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuy() + "  P2 prob to buy: " + playerTwo.getProbabilityToBuy() + "  P3 prob to buy: " + playerThree.getProbabilityToBuy() + "  P4 prob to buy: " + playerFour.getProbabilityToBuy() + "  roundnum: "+ roundNum);
 
             //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuy() + "    roundNum: " + roundNum);
