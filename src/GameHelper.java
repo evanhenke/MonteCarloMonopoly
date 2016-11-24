@@ -1,3 +1,5 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,11 +13,9 @@ public class GameHelper {
     double[] diceRollProbability = new double[12];
 
 
-    static Player playerOne = new Player(1,1,0.7);
-    static Player playerTwo = new Player(2,2,0.7);
-    static Player playerThree = new Player(3,3,0.7);
-    static Player playerFour = new Player(4,4,0.7);
-    static ArrayList<Player> PlayerArray = new ArrayList<>();
+    private int amount;
+    private int currentPlayerStateIndex;
+    private int ownerID;
 
     private MonteCarloMonopoly game = new MonteCarloMonopoly();
 
@@ -31,6 +31,72 @@ public class GameHelper {
             System.out.print(player.getPlayerID() + " ");
         }
         System.out.println();
+    }
+
+    public void accountForPlayerPassingGo(){
+        if (game.getCurrentPlayer().didPlayerPassGo()) {
+            game.getCurrentPlayer().gainAmount(200);
+            System.out.println("Player " + game.getCurrentPlayer().getPlayerID() + " passed go, new state is: " + game.getCurrentPlayer().getState() + " and new money is: " + game.getCurrentPlayer().getMoney() + " from accountForPlayerPassingGo method");
+        }
+    }
+
+    public void propertyPurchasedFromBank(Player playerWhoBought){
+        playerWhoBought.loseAmount(game.getStateObject().getAmountOfPropertyAtIndex(playerWhoBought.getState()));
+        game.getStateObject().setStateToOwnedInArrays(playerWhoBought.getState(), playerWhoBought.getPlayerID());
+        playerWhoBought.increaseNumberOfOwnedProperties();
+        System.out.println(playerWhoBought.getPlayerID() + " has purchased the property, new money: " + playerWhoBought.getMoney() + " new num prop owned: " + playerWhoBought.getNumPropertiesOwned());
+    }
+
+    public int setAmountOfMoneyToBeTransferred(){
+        currentPlayerStateIndex = game.getCurrentPlayer().getState();
+        System.out.println("testing shit this is currentPlayerStateIndex: " + currentPlayerStateIndex);
+        ownerID = game.getStateObject().getIsStateOwnedIndexAt(currentPlayerStateIndex);
+        System.out.println("testing more shit this is ownerID in setAmountTransferred method: " + ownerID);
+
+        if (game.getCurrentPlayer().getPlayerID() == ownerID) {
+            amount = 0;
+            System.out.println("it is his own state");
+        } else {
+            amount = game.getStateObject().getAmountOfPropertyAtIndex(currentPlayerStateIndex)*game.getPlayerByID(ownerID).getNumPropertiesOwned();
+            System.out.println("State " + currentPlayerStateIndex + " is owned by player " + ownerID + " and the amount owed is " + amount + " from setAmountOfMoneyToBeTransferred method");
+        }
+        return amount;
+    }
+
+    public void payPlayer(int amount){
+        currentPlayerStateIndex = game.getCurrentPlayer().getState();
+        ownerID = game.getStateObject().getIsStateOwnedIndexAt(currentPlayerStateIndex);
+        game.getPlayerByID(ownerID).gainAmount(amount);
+        System.out.println("Player " + game.getPlayerByID(ownerID).getPlayerID() + " has gained " + amount + " and new total money is " + game.getPlayerByID(ownerID).getMoney());
+    }
+
+    public ArrayList<Player> adjustPlayerArrayInCaseOfPlayerLoss(ArrayList<Player> PlayerArray){
+        if (!game.getPlayerByID(1).isPlaying() && PlayerArray.contains(game.getPlayerByID(1))) {
+            PlayerArray.remove(game.getPlayerByID(1));
+            System.out.println("Player " + game.getPlayerByID(1).getPlayerID() + " has been removed from the PlayerArray Array List");
+            System.out.println("There are " + PlayerArray.size() + " players left");
+        }
+        if (!game.getPlayerByID(2).isPlaying() && PlayerArray.contains(game.getPlayerByID(2))) {
+            PlayerArray.remove(game.getPlayerByID(2));
+            System.out.println("Player " + game.getPlayerByID(2).getPlayerID() + " has been removed from the PlayerArray Array List");
+            System.out.println("There are " + PlayerArray.size() + " players left");
+        }
+        if (!game.getPlayerByID(3).isPlaying() && PlayerArray.contains(game.getPlayerByID(3))) {
+            PlayerArray.remove(game.getPlayerByID(3));
+            System.out.println("Player " + game.getPlayerByID(3).getPlayerID() + " has been removed from the PlayerArray Array List");
+            System.out.println("There are " + PlayerArray.size() + " players left");
+        }
+        if (!game.getPlayerByID(4).isPlaying() && PlayerArray.contains(game.getPlayerByID(4))) {
+            PlayerArray.remove(game.getPlayerByID(4));
+            System.out.println("Player " + game.getPlayerByID(4).getPlayerID() + " has been removed from the PlayerArray Array List");
+            System.out.println("There are " + PlayerArray.size() + " players left");
+        }
+
+        return PlayerArray;
+    }
+
+    public void adjustTotalPlayerWinsDueToGameEnding(){
+        game.getPlayerArray().get(0).increaseNumberOfWins();
     }
 
     public double getRoundWinnerProbabilityToBuy(Player p1, Player p2, Player p3, Player p4){
@@ -87,5 +153,17 @@ public class GameHelper {
                 System.out.print(Math.round(transitionMatrix[i][j]*1000)/1000.0 + " ");
             }
         }
+    }
+
+    public void exportCSV(double[] probabilityArray) throws Exception {
+        BufferedWriter br = new BufferedWriter(new FileWriter("myfile.csv"));
+        StringBuilder sb = new StringBuilder();
+        for (double element : probabilityArray) {
+            sb.append(element);
+            sb.append("\n");
+        }
+
+        br.write(sb.toString());
+        br.close();
     }
 }
