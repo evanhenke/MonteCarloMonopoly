@@ -10,7 +10,7 @@ public class Strategy {
     private State state = new State();
 
 
-    public Strategy(Player playerOne, Player playerTwo, Player playerThree, Player playerFour){
+    public Strategy(){
     }
 
     public boolean shouldPlayerBuy(Player player) {

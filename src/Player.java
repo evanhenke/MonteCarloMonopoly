@@ -1,3 +1,5 @@
+import static java.lang.Math.abs;
+
 public class Player {
     private MonteCarloMonopoly game = new MonteCarloMonopoly();
 
@@ -11,10 +13,12 @@ public class Player {
     private int numPropertiesOwned = 0;
     private int numOfWins = 0;  //per round
     private double probabilityToBuyOfTheWinner;
-    private static double ai = 0.999;
+    private static double ai = 0.99;
 
     GameHelper gh = new GameHelper();
     double[][] transitionMatrix = gh.generateTransitionMatrix();
+
+    public Player(){}
 
     public Player(int ID, int side, double buyingProbability){
         playerID = ID;
@@ -116,18 +120,24 @@ public class Player {
     public void setProbabilityToBuy(double prob){ probabilityToBuy = prob; }
 
     public void adjustProbabilityToBuy(){
+        double var = probabilityToBuy;
         probabilityToBuy = ai*probabilityToBuy + (1 - ai)*probabilityToBuyOfTheWinner;
+        if(abs(probabilityToBuy - var)>0.005) {
+            System.out.println("difference is larger than it should be?");
+            //state.displayOwnedAndOwnableArrays();
+            System.exit(0);
+        }
     }
+
 
     public double getProbabilityToBuyOfTheWinner(){ return probabilityToBuyOfTheWinner; }
 
-
-    public void displayPlayerTransistionMatrix(){
-        for(int i = 0; i < 40; i++){
-            System.out.println();
-            for(int j = 0; j < 40; j++){
-                System.out.print(transitionMatrix[i][j] + " ");
-            }
+    public boolean canAffordProperty(){
+        if(money > game.getStateObject().getAmountOfPropertyAtIndex(state)){
+            System.out.println("Player " + playerID + " can afford the property " + state + " from canAffordProperty method");
+            return true;
         }
+        System.out.println("Player " + playerID + " cannot afford the property " + state + " from canAffordProperty method");
+        return false;
     }
 }

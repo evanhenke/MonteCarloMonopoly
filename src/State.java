@@ -5,6 +5,7 @@ public class State {
     private int[] isStateOwnableArray = new int[40];
     private int[] isStateOwnedArray = new int[40];
 
+
     private double[][] transitionMatrix = gh.generateTransitionMatrix();
 
     public State(){
@@ -38,7 +39,7 @@ public class State {
         isStateOwnableArray[index] = 0;
     }
 
-    public int getAmount(int index){
+    public int getAmountOfPropertyAtIndex(int index){
         if (index >= 1 && index <= 9){
             return 100;
         }if (index >= 11 && index <= 19){
@@ -49,6 +50,24 @@ public class State {
             return 400;
         }
         return 0;
+    }
+
+    public boolean stateIsOwnableAtIndex(int stateIndex){
+        if (isStateOwnableArray[stateIndex] == 1){
+            System.out.println("State " + stateIndex + " is ownable(==" + isStateOwnableArray[stateIndex] + ") and will return true from stateIsOwnableAtIndex method");
+            return true;
+        }
+        System.out.println("State " + stateIndex + " is not ownable(==" + isStateOwnableArray[stateIndex] + ") and will return false from stateIsOwnableAtIndex method");
+        return false;
+    }
+
+    public boolean stateIsOwnedAtIndex(int stateIndex){
+        if(isStateOwnedArray[stateIndex]!=0){
+            System.out.println("State is owned by: " + isStateOwnedArray[stateIndex] + " from stateIsOwnedAtIndex method");
+            return true;
+        }
+        System.out.println("State is not owned");
+        return false;
     }
 
     public void updateOwnedAndOwnableDueToPlayerLoss(int playerID){
