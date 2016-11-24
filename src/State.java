@@ -54,19 +54,19 @@ public class State {
 
     public boolean stateIsOwnableAtIndex(int stateIndex){
         if (isStateOwnableArray[stateIndex] == 1){
-            System.out.println("State " + stateIndex + " is ownable(==" + isStateOwnableArray[stateIndex] + ") and will return true from stateIsOwnableAtIndex method");
+            //System.out.println("State " + stateIndex + " is ownable(==" + isStateOwnableArray[stateIndex] + ") and will return true from stateIsOwnableAtIndex method");
             return true;
         }
-        System.out.println("State " + stateIndex + " is not ownable(==" + isStateOwnableArray[stateIndex] + ") and will return false from stateIsOwnableAtIndex method");
+        //System.out.println("State " + stateIndex + " is not ownable(==" + isStateOwnableArray[stateIndex] + ") and will return false from stateIsOwnableAtIndex method");
         return false;
     }
 
     public boolean stateIsOwnedAtIndex(int stateIndex){
         if(isStateOwnedArray[stateIndex]!=0){
-            System.out.println("State is owned by: " + isStateOwnedArray[stateIndex] + " from stateIsOwnedAtIndex method");
+            //System.out.println("State is owned by: " + isStateOwnedArray[stateIndex] + " from stateIsOwnedAtIndex method");
             return true;
         }
-        System.out.println("State is not owned");
+        //System.out.println("State is not owned");
         return false;
     }
 

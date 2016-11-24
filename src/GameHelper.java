@@ -36,7 +36,7 @@ public class GameHelper {
     public void accountForPlayerPassingGo(){
         if (game.getCurrentPlayer().didPlayerPassGo()) {
             game.getCurrentPlayer().gainAmount(200);
-            System.out.println("Player " + game.getCurrentPlayer().getPlayerID() + " passed go, new state is: " + game.getCurrentPlayer().getState() + " and new money is: " + game.getCurrentPlayer().getMoney() + " from accountForPlayerPassingGo method");
+            //System.out.println("Player " + game.getCurrentPlayer().getPlayerID() + " passed go, new state is: " + game.getCurrentPlayer().getState() + " and new money is: " + game.getCurrentPlayer().getMoney() + " from accountForPlayerPassingGo method");
         }
     }
 
@@ -44,21 +44,21 @@ public class GameHelper {
         playerWhoBought.loseAmount(game.getStateObject().getAmountOfPropertyAtIndex(playerWhoBought.getState()));
         game.getStateObject().setStateToOwnedInArrays(playerWhoBought.getState(), playerWhoBought.getPlayerID());
         playerWhoBought.increaseNumberOfOwnedProperties();
-        System.out.println(playerWhoBought.getPlayerID() + " has purchased the property, new money: " + playerWhoBought.getMoney() + " new num prop owned: " + playerWhoBought.getNumPropertiesOwned());
+        //System.out.println(playerWhoBought.getPlayerID() + " has purchased the property, new money: " + playerWhoBought.getMoney() + " new num prop owned: " + playerWhoBought.getNumPropertiesOwned());
     }
 
     public int setAmountOfMoneyToBeTransferred(){
         currentPlayerStateIndex = game.getCurrentPlayer().getState();
-        System.out.println("testing shit this is currentPlayerStateIndex: " + currentPlayerStateIndex);
+        //System.out.println("testing shit this is currentPlayerStateIndex: " + currentPlayerStateIndex);
         ownerID = game.getStateObject().getIsStateOwnedIndexAt(currentPlayerStateIndex);
-        System.out.println("testing more shit this is ownerID in setAmountTransferred method: " + ownerID);
+        //System.out.println("testing more shit this is ownerID in setAmountTransferred method: " + ownerID);
 
         if (game.getCurrentPlayer().getPlayerID() == ownerID) {
             amount = 0;
-            System.out.println("it is his own state");
+            //System.out.println("it is his own state");
         } else {
             amount = game.getStateObject().getAmountOfPropertyAtIndex(currentPlayerStateIndex)*game.getPlayerByID(ownerID).getNumPropertiesOwned();
-            System.out.println("State " + currentPlayerStateIndex + " is owned by player " + ownerID + " and the amount owed is " + amount + " from setAmountOfMoneyToBeTransferred method");
+            //System.out.println("State " + currentPlayerStateIndex + " is owned by player " + ownerID + " and the amount owed is " + amount + " from setAmountOfMoneyToBeTransferred method");
         }
         return amount;
     }
@@ -67,29 +67,29 @@ public class GameHelper {
         currentPlayerStateIndex = game.getCurrentPlayer().getState();
         ownerID = game.getStateObject().getIsStateOwnedIndexAt(currentPlayerStateIndex);
         game.getPlayerByID(ownerID).gainAmount(amount);
-        System.out.println("Player " + game.getPlayerByID(ownerID).getPlayerID() + " has gained " + amount + " and new total money is " + game.getPlayerByID(ownerID).getMoney());
+        //System.out.println("Player " + game.getPlayerByID(ownerID).getPlayerID() + " has gained " + amount + " and new total money is " + game.getPlayerByID(ownerID).getMoney());
     }
 
     public ArrayList<Player> adjustPlayerArrayInCaseOfPlayerLoss(ArrayList<Player> PlayerArray){
         if (!game.getPlayerByID(1).isPlaying() && PlayerArray.contains(game.getPlayerByID(1))) {
             PlayerArray.remove(game.getPlayerByID(1));
-            System.out.println("Player " + game.getPlayerByID(1).getPlayerID() + " has been removed from the PlayerArray Array List");
-            System.out.println("There are " + PlayerArray.size() + " players left");
+            //System.out.println("Player " + game.getPlayerByID(1).getPlayerID() + " has been removed from the PlayerArray Array List");
+            //System.out.println("There are " + PlayerArray.size() + " players left");
         }
         if (!game.getPlayerByID(2).isPlaying() && PlayerArray.contains(game.getPlayerByID(2))) {
             PlayerArray.remove(game.getPlayerByID(2));
-            System.out.println("Player " + game.getPlayerByID(2).getPlayerID() + " has been removed from the PlayerArray Array List");
-            System.out.println("There are " + PlayerArray.size() + " players left");
+            //System.out.println("Player " + game.getPlayerByID(2).getPlayerID() + " has been removed from the PlayerArray Array List");
+            //System.out.println("There are " + PlayerArray.size() + " players left");
         }
         if (!game.getPlayerByID(3).isPlaying() && PlayerArray.contains(game.getPlayerByID(3))) {
             PlayerArray.remove(game.getPlayerByID(3));
-            System.out.println("Player " + game.getPlayerByID(3).getPlayerID() + " has been removed from the PlayerArray Array List");
-            System.out.println("There are " + PlayerArray.size() + " players left");
+            //System.out.println("Player " + game.getPlayerByID(3).getPlayerID() + " has been removed from the PlayerArray Array List");
+            //System.out.println("There are " + PlayerArray.size() + " players left");
         }
         if (!game.getPlayerByID(4).isPlaying() && PlayerArray.contains(game.getPlayerByID(4))) {
             PlayerArray.remove(game.getPlayerByID(4));
-            System.out.println("Player " + game.getPlayerByID(4).getPlayerID() + " has been removed from the PlayerArray Array List");
-            System.out.println("There are " + PlayerArray.size() + " players left");
+            //System.out.println("Player " + game.getPlayerByID(4).getPlayerID() + " has been removed from the PlayerArray Array List");
+            //System.out.println("There are " + PlayerArray.size() + " players left");
         }
 
         return PlayerArray;

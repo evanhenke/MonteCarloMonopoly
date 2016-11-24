@@ -13,7 +13,7 @@ public class Player {
     private int numPropertiesOwned = 0;
     private int numOfWins = 0;  //per round
     private double probabilityToBuyOfTheWinner;
-    private static double ai = 0.99;
+    private static double ai = 0.999;
 
     GameHelper gh = new GameHelper();
     double[][] transitionMatrix = gh.generateTransitionMatrix();
@@ -122,11 +122,11 @@ public class Player {
     public void adjustProbabilityToBuy(){
         double var = probabilityToBuy;
         probabilityToBuy = ai*probabilityToBuy + (1 - ai)*probabilityToBuyOfTheWinner;
-        if(abs(probabilityToBuy - var)>0.005) {
+        /*if(abs(probabilityToBuy - var)>0.005) {
             System.out.println("difference is larger than it should be?");
             //state.displayOwnedAndOwnableArrays();
             System.exit(0);
-        }
+        }*/
     }
 
 
@@ -134,10 +134,10 @@ public class Player {
 
     public boolean canAffordProperty(){
         if(money > game.getStateObject().getAmountOfPropertyAtIndex(state)){
-            System.out.println("Player " + playerID + " can afford the property " + state + " from canAffordProperty method");
+            //System.out.println("Player " + playerID + " can afford the property " + state + " from canAffordProperty method");
             return true;
         }
-        System.out.println("Player " + playerID + " cannot afford the property " + state + " from canAffordProperty method");
+        //System.out.println("Player " + playerID + " cannot afford the property " + state + " from canAffordProperty method");
         return false;
     }
 }
