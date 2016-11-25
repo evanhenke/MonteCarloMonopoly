@@ -1,3 +1,5 @@
+import com.panayotis.gnuplot.JavaPlot;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.lang.reflect.Array;
@@ -18,6 +20,7 @@ public class GameHelper {
     private int ownerID;
 
     private MonteCarloMonopoly game = new MonteCarloMonopoly();
+    private JavaPlot plot = new JavaPlot("C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot.exe");
 
 
     public ArrayList randomizeOrderPlayerArray(ArrayList arrayList){
@@ -165,5 +168,31 @@ public class GameHelper {
 
         br.write(sb.toString());
         br.close();
+    }
+
+    public void plotProbabilityArray(){
+        int arraySize = game.getProbabilityArray().length;
+        double[][] array = new double[arraySize][1];
+
+        for(int count = 0; count < arraySize; count++){
+            array[count][0] = game.getProbabilityArray()[count];
+        }
+
+        plot.addPlot(array);
+        plot.plot();
+    }
+
+    public void plotProbabilityArrayInRange(int startPointByRoundNumber, int endPointByRoundNumber){
+        int arraySize = game.getProbabilityArray().length - startPointByRoundNumber - (game.getProbabilityArray().length - endPointByRoundNumber);
+        System.out.println("Starting point: " + startPointByRoundNumber + " Ending Point: " + endPointByRoundNumber + " and arraySize: " + arraySize);
+        double[][] array = new double[arraySize][1];
+
+
+        for(int count = 0; count < arraySize; count++){
+            array[count][0] = game.getProbabilityArray()[count + startPointByRoundNumber];
+        }
+
+        plot.addPlot(array);
+        plot.plot();
     }
 }

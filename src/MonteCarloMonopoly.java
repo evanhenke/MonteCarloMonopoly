@@ -1,3 +1,5 @@
+import com.panayotis.gnuplot.JavaPlot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -13,20 +15,20 @@ public class MonteCarloMonopoly {
     static State state = new State();
     static Strategy strategy = new Strategy();
 
+    static int numberOfGames = 1000;
+    static int numOfRounds = 10000;
+    static double[] probabilityArray = new double[numOfRounds];
+
 
     public static void main(String[] args) throws Exception {
         GameHelper gh = new GameHelper();
 
         int currentPlayerState;
-        int numberOfGames = 1000;
-        int numOfRounds = 10000;
         int numWinsByOne = 0;
         int ownerID;
         int moneyTransferred;
         int previousRoundNumWinsByOne;
         int highestNumWinsByOne = 0;
-
-        double[] probabilityArray = new double[numOfRounds];
 
         java.util.Date dateStart = new Date();
 
@@ -136,6 +138,7 @@ public class MonteCarloMonopoly {
         System.out.println("End time: " + dateEnd);
 
         gh.exportCSV(probabilityArray);
+        gh.plotProbabilityArrayInRange(numOfRounds/2,numOfRounds*3/4);
     }
 
 
@@ -161,5 +164,7 @@ public class MonteCarloMonopoly {
     }
 
     public Player getCurrentPlayer(){ return currentPlayer; }
+
+    public double[] getProbabilityArray(){ return probabilityArray; }
 
 }
