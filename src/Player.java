@@ -13,7 +13,7 @@ public class Player {
     private int numPropertiesOwned = 0;
     private int numOfWins = 0;  //per round
     private double probabilityToBuyOfTheWinner;
-    private static double ai = 0.999;
+    private static double ai = 0.99;
 
     GameHelper gh = new GameHelper();
     double[][] transitionMatrix = gh.generateTransitionMatrix();

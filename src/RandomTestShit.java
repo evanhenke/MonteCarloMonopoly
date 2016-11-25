@@ -1,3 +1,5 @@
+import com.panayotis.gnuplot.JavaPlot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -14,7 +16,13 @@ public class RandomTestShit {
 
     public static void main(String[] args) {
 
-        System.out.println(Math.random() * .2 + .7);
+        JavaPlot plot = new JavaPlot("C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot.exe");
+
+        plot.addPlot("sin(x)");
+        plot.plot();
+
+
+        /*System.out.println(Math.random() * .2 + .7);
         System.out.println(Math.random());
         System.out.println(Math.random());
         System.out.println(Math.random());
@@ -29,7 +37,7 @@ public class RandomTestShit {
 
         for(Player player : PlayerArray){
             System.out.print(player.getPlayerID());
-        }
+        }*/
     }
 
 }
