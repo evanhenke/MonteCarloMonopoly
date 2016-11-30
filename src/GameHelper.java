@@ -20,7 +20,6 @@ public class GameHelper {
     private int ownerID;
 
     private MonteCarloMonopoly game = new MonteCarloMonopoly();
-    private JavaPlot plot = new JavaPlot("C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot.exe");
 
 
     public ArrayList randomizeOrderPlayerArray(ArrayList arrayList){
@@ -102,15 +101,20 @@ public class GameHelper {
         game.getPlayerArray().get(0).increaseNumberOfWins();
     }
 
-    public double getRoundWinnerProbabilityToBuy(Player p1, Player p2, Player p3, Player p4){
+    public Player getRoundWinner(){
+        Player p1 = game.getPlayerByID(1);
+        Player p2 = game.getPlayerByID(2);
+        Player p3 = game.getPlayerByID(3);
+        Player p4 = game.getPlayerByID(4);
+
         if(p1.getNumOfWins() > p2.getNumOfWins() && p1.getNumOfWins() > p3.getNumOfWins() && p1.getNumOfWins() > p4.getNumOfWins()){
-            return p1.getProbabilityToBuy();
+            return p1;
         }else if(p2.getNumOfWins() > p1.getNumOfWins() && p2.getNumOfWins() > p3.getNumOfWins() && p2.getNumOfWins() > p4.getNumOfWins()){
-            return p2.getProbabilityToBuy();
+            return p2;
         }else if(p3.getNumOfWins() > p1.getNumOfWins() && p3.getNumOfWins() > p2.getNumOfWins() && p3.getNumOfWins() > p4.getNumOfWins()){
-            return p3.getProbabilityToBuy();
+            return p3;
         }
-        return p4.getProbabilityToBuy();
+        return p4;
     }
 
     public double[][] generateTransitionMatrix(){
@@ -161,6 +165,8 @@ public class GameHelper {
     public void exportCSV(double[] probabilityArray) throws Exception {
         BufferedWriter br = new BufferedWriter(new FileWriter("myfile.csv"));
         StringBuilder sb = new StringBuilder();
+        sb.append("Probability of Player One to buy on side one");
+        sb.append("\n");
         for (double element : probabilityArray) {
             sb.append(element);
             sb.append("\n");
@@ -171,11 +177,25 @@ public class GameHelper {
     }
 
     public void plotProbabilityArray(){
-        int arraySize = game.getProbabilityArray().length;
+        JavaPlot plot = new JavaPlot("C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot.exe");
+        int arraySize = game.getProbabilityArrayOnSideOne().length;
         double[][] array = new double[arraySize][1];
 
         for(int count = 0; count < arraySize; count++){
-            array[count][0] = game.getProbabilityArray()[count];
+            array[count][0] = game.getProbabilityArrayOnSideOne()[count];
+        }
+
+        plot.addPlot(array);
+        plot.plot();
+    }
+
+    public void plotProbabilityArray(double[] arrayGiven){
+        JavaPlot plot = new JavaPlot("C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot.exe");
+        int arraySize = arrayGiven.length;
+        double[][] array = new double[arraySize][1];
+
+        for(int count = 0; count < arraySize; count++){
+            array[count][0] = arrayGiven[count];
         }
 
         plot.addPlot(array);
@@ -183,13 +203,14 @@ public class GameHelper {
     }
 
     public void plotProbabilityArrayInRange(int startPointByRoundNumber, int endPointByRoundNumber){
-        int arraySize = game.getProbabilityArray().length - startPointByRoundNumber - (game.getProbabilityArray().length - endPointByRoundNumber);
-        System.out.println("Starting point: " + startPointByRoundNumber + " Ending Point: " + endPointByRoundNumber + " and arraySize: " + arraySize);
+        JavaPlot plot = new JavaPlot("C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot.exe");
+        int arraySize = game.getProbabilityArrayOnSideOne().length - startPointByRoundNumber - (game.getProbabilityArrayOnSideOne().length - endPointByRoundNumber);
+        //System.out.println("Starting point: " + startPointByRoundNumber + " Ending Point: " + endPointByRoundNumber + " and arraySize: " + arraySize);
         double[][] array = new double[arraySize][1];
 
 
         for(int count = 0; count < arraySize; count++){
-            array[count][0] = game.getProbabilityArray()[count + startPointByRoundNumber];
+            array[count][0] = game.getProbabilityArrayOnSideOne()[count + startPointByRoundNumber];
         }
 
         plot.addPlot(array);
