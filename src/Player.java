@@ -1,4 +1,5 @@
 import static java.lang.Math.abs;
+import static java.lang.Math.random;
 
 public class Player {
     private MonteCarloMonopoly game = new MonteCarloMonopoly();
@@ -6,13 +7,20 @@ public class Player {
     private int playerID = 0;
     private int state = 0;
     private int previousState = 0;
+    private int currentSideOfBoard = 1;
     private boolean isPlaying = true;
     private int money = 1200;
     private int favoredSide;
-    private double probabilityToBuy;
+    private double probabilityToBuyOnSideOne;
+    private double probabilityToBuyOnSideTwo;
+    private double probabilityToBuyOnSideThree;
+    private double probabilityToBuyOnSideFour;
     private int numPropertiesOwned = 0;
     private int numOfWins = 0;  //per round
-    private double probabilityToBuyOfTheWinner;
+    private double probabilityToBuyOfTheWinnerOnSideOne;
+    private double probabilityToBuyOfTheWinnerOnSideTwo;
+    private double probabilityToBuyOfTheWinnerOnSideThree;
+    private double probabilityToBuyOfTheWinnerOnSideFour;
     private static double ai = 0.99;
 
     GameHelper gh = new GameHelper();
@@ -23,7 +31,10 @@ public class Player {
     public Player(int ID, int side, double buyingProbability){
         playerID = ID;
         favoredSide = side;
-        probabilityToBuy = buyingProbability;
+        probabilityToBuyOnSideOne = buyingProbability;
+        probabilityToBuyOnSideTwo = buyingProbability;
+        probabilityToBuyOnSideThree = buyingProbability;
+        probabilityToBuyOnSideFour = buyingProbability;
     }
 
     public void setPlayerID(int newID){ playerID = newID; }
@@ -34,10 +45,29 @@ public class Player {
     public void setPreviousState(int newPreviousState) { previousState = newPreviousState; }
 
     public int getState() { return state; }
-    public int getPreviousState() { return previousState; }
-    public int getMoney(){ return money; }
-    public double getProbabilityToBuy(){ return probabilityToBuy; }
 
+    public int getPreviousState() { return previousState; }
+
+    public int getMoney(){ return money; }
+
+    public double getProbabilityToBuyOnSideOne(){ return probabilityToBuyOnSideOne; }
+    public double getProbabilityToBuyOnSideTwo(){ return probabilityToBuyOnSideTwo; }
+    public double getProbabilityToBuyOnSideThree(){ return probabilityToBuyOnSideThree; }
+    public double getProbabilityToBuyOnSideFour(){ return probabilityToBuyOnSideFour; }
+
+    public void randomizeProbabilityToBuyOnEachSide(){
+        probabilityToBuyOnSideOne = Math.random();
+        probabilityToBuyOnSideTwo = Math.random();
+        probabilityToBuyOnSideThree = Math.random();
+        probabilityToBuyOnSideFour = Math.random();
+    }
+
+    public void randomizeProbabilityToBuyOnEachSideInRange(double start, double end){
+        probabilityToBuyOnSideOne = Math.random()*(end - start) + start;
+        probabilityToBuyOnSideTwo = Math.random()*(end - start) + start;
+        probabilityToBuyOnSideThree = Math.random()*(end - start) + start;
+        probabilityToBuyOnSideFour = Math.random()*(end - start) + start;
+    }
 
     public boolean isPlaying(){ return isPlaying; }
 
@@ -69,6 +99,7 @@ public class Player {
                 break;
             }
         }
+        setCurrentSideOfBoard();
     }
 
     public void loseAmount(int amountToLose){
@@ -113,15 +144,18 @@ public class Player {
     public void increaseNumberOfWins(){ numOfWins++; }
     public int getNumOfWins(){ return numOfWins; }
 
-    public void setProbabilityToBuyOfTheWinner(double prob){
-        probabilityToBuyOfTheWinner = prob;
-    }
-
-    public void setProbabilityToBuy(double prob){ probabilityToBuy = prob; }
 
     public void adjustProbabilityToBuy(){
-        double var = probabilityToBuy;
-        probabilityToBuy = ai*probabilityToBuy + (1 - ai)*probabilityToBuyOfTheWinner;
+        probabilityToBuyOfTheWinnerOnSideOne = game.getRoundWinner().getProbabilityToBuyOnSideOne();
+        probabilityToBuyOfTheWinnerOnSideTwo = game.getRoundWinner().getProbabilityToBuyOnSideTwo();
+        probabilityToBuyOfTheWinnerOnSideThree = game.getRoundWinner().getProbabilityToBuyOnSideThree();
+        probabilityToBuyOfTheWinnerOnSideFour = game.getRoundWinner().getProbabilityToBuyOnSideFour();
+
+        //double var = probabilityToBuy;
+        probabilityToBuyOnSideOne = ai*probabilityToBuyOnSideOne + (1 - ai)*probabilityToBuyOfTheWinnerOnSideOne;
+        probabilityToBuyOnSideTwo = ai*probabilityToBuyOnSideTwo + (1 - ai)*probabilityToBuyOfTheWinnerOnSideTwo;
+        probabilityToBuyOnSideThree = ai*probabilityToBuyOnSideThree + (1 - ai)*probabilityToBuyOfTheWinnerOnSideThree;
+        probabilityToBuyOnSideFour = ai*probabilityToBuyOnSideFour + (1 - ai)*probabilityToBuyOfTheWinnerOnSideFour;
         /*if(abs(probabilityToBuy - var)>0.005) {
             System.out.println("difference is larger than it should be?");
             //state.displayOwnedAndOwnableArrays();
@@ -129,8 +163,23 @@ public class Player {
         }*/
     }
 
+    public void setCurrentSideOfBoard(){
+        if (state <= 10){
+            currentSideOfBoard = 1;
+        } else if (state >= 11 && state <= 20){
+            currentSideOfBoard = 2;
+        } else if (state >= 21 && state <= 30){
+            currentSideOfBoard = 3;
+        } else if (state >= 31 && state <= 39){
+            currentSideOfBoard = 4;
+        } else {
+            System.out.println("setCurrentSideOfBoard is giving error, state is not a valid state, it is: " + state);
+            System.exit(0);
+        }
+    }
 
-    public double getProbabilityToBuyOfTheWinner(){ return probabilityToBuyOfTheWinner; }
+    public int getCurrentSideOfBoard(){ return currentSideOfBoard; }
+
 
     public boolean canAffordProperty(){
         if(money > game.getStateObject().getAmountOfPropertyAtIndex(state)){

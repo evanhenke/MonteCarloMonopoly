@@ -12,12 +12,16 @@ public class MonteCarloMonopoly {
     static Player playerThree = new Player(3,3,Math.random()*0.2 + 0.7);
     static Player playerFour = new Player(4,4,Math.random()*0.2 + 0.7);
     static Player currentPlayer = new Player();
+    static Player roundWinner = new Player();
     static State state = new State();
     static Strategy strategy = new Strategy();
 
     static int numberOfGames = 1000;
     static int numOfRounds = 10000;
-    static double[] probabilityArray = new double[numOfRounds];
+    static double[] probabilityArrayOnSideOne = new double[numOfRounds];
+    static double[] probabilityArrayOnSideTwo = new double[numOfRounds];
+    static double[] probabilityArrayOnSideThree = new double[numOfRounds];
+    static double[] probabilityArrayOnSideFour = new double[numOfRounds];
 
 
     public static void main(String[] args) throws Exception {
@@ -40,9 +44,9 @@ public class MonteCarloMonopoly {
             playerTwo.resetNumPlayerWins();
             playerThree.resetNumPlayerWins();
             playerFour.resetNumPlayerWins();
-            playerTwo.setProbabilityToBuy(Math.random()*0.2 + 0.7);
-            playerThree.setProbabilityToBuy(Math.random()*0.2 + 0.7);
-            playerFour.setProbabilityToBuy(Math.random()*0.2 + 0.7);
+            playerTwo.randomizeProbabilityToBuyOnEachSide();
+            playerThree.randomizeProbabilityToBuyOnEachSide();
+            playerFour.randomizeProbabilityToBuyOnEachSide();
 
             for (int n = 1; n <= numberOfGames; n++) {
                 //System.out.println("%%%%%%%%%%  Game Number " + n + " %%%%%%%%%%");
@@ -77,7 +81,7 @@ public class MonteCarloMonopoly {
                             if (strategy.shouldPlayerBuy(player)) {
                                 gh.propertyPurchasedFromBank(player);
                             }else {
-                                //System.out.println("Player " + player.getPlayerID() + " decided not to buy with prob: " + player.getProbabilityToBuy());
+                                //System.out.println("Player " + player.getPlayerID() + " decided not to buy");
                             }
                         } else if (state.stateIsOwnedAtIndex(currentPlayerState)) {
                             ownerID = state.getIsStateOwnedIndexAt(currentPlayerState);
@@ -114,22 +118,28 @@ public class MonteCarloMonopoly {
                 PlayerArray.clear();
             }
 
-            //System.out.println();
-            System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuy() + "  P2 prob to buy: " + playerTwo.getProbabilityToBuy() + "  P3 prob to buy: " + playerThree.getProbabilityToBuy() + "  P4 prob to buy: " + playerFour.getProbabilityToBuy() + "  roundnum: "+ roundNum);
+            roundWinner = gh.getRoundWinner();
 
+            //System.out.println();
+            //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuyOnSideOne() + "  P2 prob to buy: " + playerTwo.getProbabilityToBuyOnSideOne() + "  P3 prob to buy: " + playerThree.getProbabilityToBuyOnSideOne() + "  P4 prob to buy: " + playerFour.getProbabilityToBuyOnSideOne() + "  roundnum: "+ roundNum + "  roundWinner: player " + roundWinner.getPlayerID());
+
+            System.out.println("P1 prob side 1: " + playerOne.getProbabilityToBuyOnSideOne() + "  P1 prob side 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " P1 prob side 3: " + playerOne.getProbabilityToBuyOnSideThree() + "  p1 prob side 4: " + playerOne.getProbabilityToBuyOnSideFour() + "  roundNum: " + roundNum + "  roundWinner: "+ roundWinner.getPlayerID());
             //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuy() + "    roundNum: " + roundNum);
 
             //System.out.println("P1 wins = " + playerOne.getNumOfWins() + " P2 wins = " + playerTwo.getNumOfWins() + " P3 wins = " + playerThree.getNumOfWins() + " P4 wins = " + playerFour.getNumOfWins());
 
-            playerOne.setProbabilityToBuyOfTheWinner(gh.getRoundWinnerProbabilityToBuy(playerOne,playerTwo,playerThree,playerFour));
+            playerOne.adjustProbabilityToBuy();
 
             numWinsByOne = playerOne.getNumOfWins();
             playerOne.adjustProbabilityToBuy();
 
-            //System.out.print("roundNum: " + roundNum + "  sum of wins: " + (playerOne.getNumOfWins() + playerTwo.getNumOfWins() + playerThree.getNumOfWins() + playerFour.getNumOfWins()));
+            //System.out.print("roundNum: " + roundNum + "  sum of wins per round: " + (playerOne.getNumOfWins() + playerTwo.getNumOfWins() + playerThree.getNumOfWins() + playerFour.getNumOfWins()));
             //System.out.println();
 
-            probabilityArray[roundNum-1] = playerOne.getProbabilityToBuy();
+            probabilityArrayOnSideOne[roundNum-1] = playerOne.getProbabilityToBuyOnSideOne();
+            probabilityArrayOnSideTwo[roundNum-1] = playerOne.getProbabilityToBuyOnSideTwo();
+            probabilityArrayOnSideThree[roundNum-1] = playerOne.getProbabilityToBuyOnSideThree();
+            probabilityArrayOnSideFour[roundNum-1] = playerOne.getProbabilityToBuyOnSideFour();
 
         }
 
@@ -137,16 +147,27 @@ public class MonteCarloMonopoly {
         System.out.println("Start time: " + dateStart);
         System.out.println("End time: " + dateEnd);
 
-        gh.exportCSV(probabilityArray);
-        gh.plotProbabilityArrayInRange(numOfRounds/2,numOfRounds*3/4);
-    }
+        /*double[] averageValueProbabilityArrayOnSideOne = new double[numOfRounds];
+        averageValueProbabilityArrayOnSideOne[0] = probabilityArrayOnSideOne[0];
 
+        for(int index = 1; index <= probabilityArrayOnSideOne.length; index++){
+            averageValueProbabilityArrayOnSideOne[index] = averageValueProbabilityArrayOnSideOne[index-1]/index;
+        }*/
+
+        gh.exportCSV(probabilityArrayOnSideOne);
+        gh.plotProbabilityArray(probabilityArrayOnSideOne);
+        gh.plotProbabilityArray(probabilityArrayOnSideTwo);
+        gh.plotProbabilityArray(probabilityArrayOnSideThree);
+        gh.plotProbabilityArray(probabilityArrayOnSideFour);
+    }
 
 
 
     public State getStateObject(){ return state; }
 
     public ArrayList<Player> getPlayerArray(){ return PlayerArray; }
+
+    public Player getRoundWinner(){ return roundWinner; }
 
     public Player getPlayerByID(int ID){
         if(ID == 1){
@@ -165,6 +186,9 @@ public class MonteCarloMonopoly {
 
     public Player getCurrentPlayer(){ return currentPlayer; }
 
-    public double[] getProbabilityArray(){ return probabilityArray; }
+    public double[] getProbabilityArrayOnSideOne(){ return probabilityArrayOnSideOne; }
+    public double[] getProbabilityArrayOnSideTwo(){ return probabilityArrayOnSideTwo; }
+    public double[] getProbabilityArrayOnSideThree(){ return probabilityArrayOnSideThree; }
+    public double[] getProbabilityArrayOnSideFour(){ return probabilityArrayOnSideFour; }
 
 }
