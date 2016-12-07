@@ -1,5 +1,3 @@
-import com.panayotis.gnuplot.JavaPlot;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -15,24 +13,31 @@ public class MonteCarloMonopoly {
     static Player roundWinner = new Player();
     static State state = new State();
     static Strategy strategy = new Strategy();
+    static GameHelper gh = new GameHelper();
 
     static int numberOfGames = 1000;
-    static int numOfRounds = 10000;
+    static int numOfRounds = 50000;
+    static int startingComparisonValue = 3000;
     static double[] probabilityArrayOnSideOne = new double[numOfRounds];
     static double[] probabilityArrayOnSideTwo = new double[numOfRounds];
     static double[] probabilityArrayOnSideThree = new double[numOfRounds];
     static double[] probabilityArrayOnSideFour = new double[numOfRounds];
+    static double[] averageArraySideOne = new double[numOfRounds];
+    static double[] averageArraySideTwo = new double[numOfRounds];
+    static double[] averageArraySideThree = new double[numOfRounds];
+    static double[] averageArraySideFour = new double[numOfRounds];
+    static double probSumSideOne=0,probSumSideTwo=0,probSumSideThree=0,probSumSideFour=0;
+    static double averageSideOne,averageSideTwo,averageSideThree,averageSideFour;
 
 
     public static void main(String[] args) throws Exception {
-        GameHelper gh = new GameHelper();
-
         int currentPlayerState;
         int numWinsByOne = 0;
         int ownerID;
         int moneyTransferred;
         int previousRoundNumWinsByOne;
         int highestNumWinsByOne = 0;
+
 
         java.util.Date dateStart = new Date();
 
@@ -123,7 +128,7 @@ public class MonteCarloMonopoly {
             //System.out.println();
             //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuyOnSideOne() + "  P2 prob to buy: " + playerTwo.getProbabilityToBuyOnSideOne() + "  P3 prob to buy: " + playerThree.getProbabilityToBuyOnSideOne() + "  P4 prob to buy: " + playerFour.getProbabilityToBuyOnSideOne() + "  roundnum: "+ roundNum + "  roundWinner: player " + roundWinner.getPlayerID());
 
-            System.out.println("P1 prob side 1: " + playerOne.getProbabilityToBuyOnSideOne() + "  P1 prob side 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " P1 prob side 3: " + playerOne.getProbabilityToBuyOnSideThree() + "  p1 prob side 4: " + playerOne.getProbabilityToBuyOnSideFour() + "  roundNum: " + roundNum + "  roundWinner: "+ roundWinner.getPlayerID());
+            System.out.println("roundNum: " + roundNum + "  roundWinner: "+ roundWinner.getPlayerID() + " p1 prob side 1: " + playerOne.getProbabilityToBuyOnSideOne() + " p1 prob side 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " p1 prob side 3: " + playerOne.getProbabilityToBuyOnSideThree() + "  p1 prob side 4: " + playerOne.getProbabilityToBuyOnSideFour() + "  p2 prob side 1: " + playerTwo.getProbabilityToBuyOnSideOne() + " p2 prob side 2: " + playerTwo.getProbabilityToBuyOnSideTwo() + " p2 prob side 3: " + playerTwo.getProbabilityToBuyOnSideThree() + " p2 prob side 4: " + playerTwo.getProbabilityToBuyOnSideFour() + " p3 prob side 1: " + playerThree.getProbabilityToBuyOnSideOne() + " p3 prob side 2: " + playerThree.getProbabilityToBuyOnSideTwo() + " p3 prob side 3: " + playerThree.getProbabilityToBuyOnSideThree() + " p3 prob side 4: " + playerThree.getProbabilityToBuyOnSideFour() + " p4 prob side 1: " + playerFour.getProbabilityToBuyOnSideOne() + " p4 prob side 2: " + playerFour.getProbabilityToBuyOnSideTwo() + " p4 prob side 3: " + playerFour.getProbabilityToBuyOnSideThree() + " p4 prob side 4: " + playerFour.getProbabilityToBuyOnSideFour() + " num wins 1: " + playerOne.getNumOfWins() + " num wins 2: " + playerTwo.getNumOfWins() + " num wins 3: " + playerThree.getNumOfWins() + " num wins 4: " + playerFour.getNumOfWins());
             //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuy() + "    roundNum: " + roundNum);
 
             //System.out.println("P1 wins = " + playerOne.getNumOfWins() + " P2 wins = " + playerTwo.getNumOfWins() + " P3 wins = " + playerThree.getNumOfWins() + " P4 wins = " + playerFour.getNumOfWins());
@@ -136,10 +141,29 @@ public class MonteCarloMonopoly {
             //System.out.print("roundNum: " + roundNum + "  sum of wins per round: " + (playerOne.getNumOfWins() + playerTwo.getNumOfWins() + playerThree.getNumOfWins() + playerFour.getNumOfWins()));
             //System.out.println();
 
+            /*
+            probSumSideOne = probSumSideOne + playerOne.getProbabilityToBuyOnSideOne();
+            probSumSideTwo = probSumSideTwo + playerOne.getProbabilityToBuyOnSideOne();
+            probSumSideThree = probSumSideThree + playerOne.getProbabilityToBuyOnSideThree();
+            probSumSideFour = probSumSideFour + playerOne.getProbabilityToBuyOnSideFour();
+
+            averageSideOne = probSumSideOne/roundNum;
+            averageSideTwo = probSumSideTwo/roundNum;
+            averageSideThree = probSumSideThree/roundNum;
+            averageSideFour = probSumSideFour/roundNum;
+
+            averageArraySideOne[roundNum-1] = averageSideOne;
+            averageArraySideTwo[roundNum-1] = averageSideTwo;
+            averageArraySideThree[roundNum-1] = averageSideThree;
+            averageArraySideFour[roundNum-1] = averageSideFour;
+            */
+
             probabilityArrayOnSideOne[roundNum-1] = playerOne.getProbabilityToBuyOnSideOne();
             probabilityArrayOnSideTwo[roundNum-1] = playerOne.getProbabilityToBuyOnSideTwo();
             probabilityArrayOnSideThree[roundNum-1] = playerOne.getProbabilityToBuyOnSideThree();
             probabilityArrayOnSideFour[roundNum-1] = playerOne.getProbabilityToBuyOnSideFour();
+
+            gh.adjustPlayerProbabilitiesToBuyImplementingFunnel(roundNum);
 
         }
 
@@ -154,11 +178,18 @@ public class MonteCarloMonopoly {
             averageValueProbabilityArrayOnSideOne[index] = averageValueProbabilityArrayOnSideOne[index-1]/index;
         }*/
 
+        double[] testingArray = gh.createAverageArrayStartingAt(3000);
+
         gh.exportCSV(probabilityArrayOnSideOne);
-        gh.plotProbabilityArray(probabilityArrayOnSideOne);
+        /*gh.plotProbabilityArray(probabilityArrayOnSideOne);
         gh.plotProbabilityArray(probabilityArrayOnSideTwo);
         gh.plotProbabilityArray(probabilityArrayOnSideThree);
-        gh.plotProbabilityArray(probabilityArrayOnSideFour);
+        gh.plotProbabilityArray(probabilityArrayOnSideFour);*/
+        gh.plotAllProbabilityArrays();
+        /*gh.plotProbabilityArray(averageArraySideOne);
+        gh.plotProbabilityArray(averageArraySideTwo);
+        gh.plotProbabilityArray(averageArraySideThree);
+        gh.plotProbabilityArray(averageArraySideFour);*/
     }
 
 
@@ -191,4 +222,21 @@ public class MonteCarloMonopoly {
     public double[] getProbabilityArrayOnSideThree(){ return probabilityArrayOnSideThree; }
     public double[] getProbabilityArrayOnSideFour(){ return probabilityArrayOnSideFour; }
 
+    public int getNumOfRounds(){ return numOfRounds; }
+
+    public double[] getAverageArrayOnSpecificSide(int sideNum){
+        if(sideNum == 1){
+            return averageArraySideOne;
+        }else if(sideNum == 2){
+            return averageArraySideTwo;
+        }else if(sideNum == 3){
+            return averageArraySideThree;
+        }else if(sideNum == 4){
+            return averageArraySideFour;
+        }else{
+            System.out.println("invalid sideNum in getAverageArrayOnSpecificSide " + sideNum);
+            System.exit(0);
+        }
+        return null;
+    }
 }

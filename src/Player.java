@@ -62,11 +62,26 @@ public class Player {
         probabilityToBuyOnSideFour = Math.random();
     }
 
-    public void randomizeProbabilityToBuyOnEachSideInRange(double start, double end){
-        probabilityToBuyOnSideOne = Math.random()*(end - start) + start;
-        probabilityToBuyOnSideTwo = Math.random()*(end - start) + start;
-        probabilityToBuyOnSideThree = Math.random()*(end - start) + start;
-        probabilityToBuyOnSideFour = Math.random()*(end - start) + start;
+    public void randomizeProbabilityToBuyOnEachSideInRange(double min, double max){
+        probabilityToBuyOnSideOne = Math.random()*(max - min) + min;
+        probabilityToBuyOnSideTwo = Math.random()*(max - min) + min;
+        probabilityToBuyOnSideThree = Math.random()*(max - min) + min;
+        probabilityToBuyOnSideFour = Math.random()*(max - min) + min;
+    }
+
+    public void randomizeProbabilityToBuyOnSpecificSideInRange(double min, double max, int sideOfBoard){
+        double value = Math.random()*(max - min) + min;
+        if(sideOfBoard == 1){
+            probabilityToBuyOnSideOne = value;
+        }else if(sideOfBoard == 2){
+            probabilityToBuyOnSideTwo = value;
+        }else if(sideOfBoard == 3){
+            probabilityToBuyOnSideThree = value;
+        }else if(sideOfBoard == 4){
+            probabilityToBuyOnSideFour = value;
+        }else{
+            System.out.println("getting an invalid sideOfBoard in player.setProbabilityWindowValues");
+        }
     }
 
     public boolean isPlaying(){ return isPlaying; }
