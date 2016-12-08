@@ -149,21 +149,21 @@ public class GameHelper {
         int numOfRounds = game.getNumOfRounds();
         if(roundNum < 1000) {
             adjustProbabilitiesBeforeFunnel();
-        }else if(roundNum >= 1000 && roundNum < 2000){
-            adjustProbabilitiesWithFunnelOfSize(.4,roundNum);
-        }else if(roundNum >= 2000 && roundNum < 3000) {
-            adjustProbabilitiesWithFunnelOfSize(.3,roundNum);
         }else if(roundNum >= 3000 && roundNum < 4000){
-            adjustProbabilitiesWithFunnelOfSize(.2,roundNum);
+            adjustProbabilitiesWithFunnelOfSize(.4,roundNum);
         }else if(roundNum >= 4000 && roundNum < 5000){
-            adjustProbabilitiesWithFunnelOfSize(.1,roundNum);
-        }else if(roundNum >= 5000 && roundNum < 6000) {
-            adjustProbabilitiesWithFunnelOfSize(.075,roundNum);
+            adjustProbabilitiesWithFunnelOfSize(.3,roundNum);
+        }else if(roundNum >= 5000 && roundNum < 6000){
+            adjustProbabilitiesWithFunnelOfSize(.2,roundNum);
         }else if(roundNum >= 6000 && roundNum < 7000){
-            adjustProbabilitiesWithFunnelOfSize(.05,roundNum);
-        }else if(roundNum >= 7000 && roundNum < 8000) {
-            adjustProbabilitiesWithFunnelOfSize(.025,roundNum);
+            adjustProbabilitiesWithFunnelOfSize(.1,roundNum);
+        }else if(roundNum >= 7000 && roundNum < 8000){
+            adjustProbabilitiesWithFunnelOfSize(.075,roundNum);
         }else if(roundNum >= 8000 && roundNum < 9000){
+            adjustProbabilitiesWithFunnelOfSize(.05,roundNum);
+        }else if(roundNum >= 9000 && roundNum < 10000){
+            adjustProbabilitiesWithFunnelOfSize(.025,roundNum);
+        }else if(roundNum >= 10000 && roundNum < 11000){
             adjustProbabilitiesWithFunnelOfSize(.01,roundNum);
         }else{
             adjustProbabilitiesWithFunnelOfSize(.005,roundNum);
@@ -177,14 +177,14 @@ public class GameHelper {
     }
 
     public void adjustProbabilitiesWithFunnelOfSize(double windowSize, int roundNum){
-        double oneMin = game.getAverageArrayOnSpecificSide(1)[roundNum-1] - (windowSize/2);
-        double oneMax = game.getAverageArrayOnSpecificSide(1)[roundNum-1] + (windowSize/2);
-        double twoMin = game.getAverageArrayOnSpecificSide(2)[roundNum-1] - (windowSize/2);
-        double twoMax = game.getAverageArrayOnSpecificSide(2)[roundNum-1] + (windowSize/2);
-        double threeMin = game.getAverageArrayOnSpecificSide(3)[roundNum-1] - (windowSize/2);
-        double threeMax = game.getAverageArrayOnSpecificSide(3)[roundNum-1] + (windowSize/2);
-        double fourMin = game.getAverageArrayOnSpecificSide(4)[roundNum-1] - (windowSize/2);
-        double fourMax = game.getAverageArrayOnSpecificSide(4)[roundNum-1] + (windowSize/2);
+        double oneMin = game.getCutAverageArrayOnSpecificSide(1)[roundNum-1] - (windowSize/2);
+        double oneMax = game.getCutAverageArrayOnSpecificSide(1)[roundNum-1] + (windowSize/2);
+        double twoMin = game.getCutAverageArrayOnSpecificSide(2)[roundNum-1] - (windowSize/2);
+        double twoMax = game.getCutAverageArrayOnSpecificSide(2)[roundNum-1] + (windowSize/2);
+        double threeMin = game.getCutAverageArrayOnSpecificSide(3)[roundNum-1] - (windowSize/2);
+        double threeMax = game.getCutAverageArrayOnSpecificSide(3)[roundNum-1] + (windowSize/2);
+        double fourMin = game.getCutAverageArrayOnSpecificSide(4)[roundNum-1] - (windowSize/2);
+        double fourMax = game.getCutAverageArrayOnSpecificSide(4)[roundNum-1] + (windowSize/2);
 
         game.getPlayerByID(2).randomizeProbabilityToBuyOnSpecificSideInRange(oneMin,oneMax,1);
         game.getPlayerByID(2).randomizeProbabilityToBuyOnSpecificSideInRange(twoMin,twoMax,2);
@@ -198,6 +198,10 @@ public class GameHelper {
         game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(twoMin,twoMax,2);
         game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(threeMin,threeMax,3);
         game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(fourMin,fourMax,4);
+        if(roundNum>9000){
+            System.out.println("oneMin: " + oneMin + " and oneMax: " + oneMax + " twoMin: " + twoMin + " twoMax: " + twoMax + " threeMin: " + threeMin + " threeMax: " + threeMax + " fourMin: " + fourMin + " fourMax: " + fourMax);
+            System.out.println("Player 2 prob to buy on side 1: " + game.getPlayerByID(2).getProbabilityToBuyOnSideOne() + " side 2: " + game.getPlayerByID(2).getProbabilityToBuyOnSideTwo() + " side 3: " + game.getPlayerByID(2).getProbabilityToBuyOnSideThree() + " side 4: " + game.getPlayerByID(2).getProbabilityToBuyOnSideFour());
+        }
     }
 
     public double[][] generateTransitionMatrix(){
@@ -272,26 +276,83 @@ public class GameHelper {
         plot.plot();
     }
 
-    public double[] createAverageArrayStartingAt(int startingIndex){
-        /*if(sideIndex == 1) {
-            double[] array = game.getProbabilityArrayOnSideOne();
-        }else if(sideIndex == 2){
-            double[] array = game.getProbabilityArrayOnSideTwo();
-        }else if(sideIndex == 3){
-            double[] array = game.getProbabilityArrayOnSideThree();
-        }else if(sideIndex == 4){
-            double[] array = game.getProbabilityArrayOnSideFour();
-        }else{
-            System.out.println("sideIndex not valid in createAverageArrayStartingAt method");
-            System.exit(0);
-        }*/
+    public double[] cutArrayOne(int numToCutOff){
         double[] array = new double[game.getProbabilityArrayOnSideOne().length];
         for(int i = 0; i < array.length; i++){
-            if(i>startingIndex){
+            if(i>numToCutOff){
                 array[i] = game.getProbabilityArrayOnSideOne()[i];
-            }else{
-                array[i] = 0;
             }
+        }
+        return array;
+    }
+
+    public double[] cutArrayTwo(int numToCutOff){
+        double[] array = new double[game.getProbabilityArrayOnSideOne().length];
+        for(int i = 0; i < array.length; i++){
+            if(i>numToCutOff){
+                array[i] = game.getProbabilityArrayOnSideTwo()[i];
+            }
+        }
+        return array;
+    }
+
+    public double[] cutArrayThree(int numToCutOff){
+        double[] array = new double[game.getProbabilityArrayOnSideOne().length];
+        for(int i = 0; i < array.length; i++){
+            if(i>numToCutOff){
+                array[i] = game.getProbabilityArrayOnSideThree()[i];
+            }
+        }
+        return array;
+    }
+
+    public double[] cutArrayFour(int numToCutOff){
+        double[] array = new double[game.getProbabilityArrayOnSideOne().length];
+        for(int i = 0; i < array.length; i++){
+            if(i>numToCutOff){
+                array[i] = game.getProbabilityArrayOnSideFour()[i];
+            }
+        }
+        return array;
+    }
+
+    public double[] createAverageArraySideOneStartingAt(int startingIndex){
+        double[] array = cutArrayOne(startingIndex);
+        for(int i = startingIndex+1; i < array.length; i++){
+            array[i] = array[i]+array[i-1];
+        }
+        for(int i = startingIndex+1; i < array.length; i++){
+            array[i] = array[i]/(i-startingIndex);
+        }
+        return array;
+    }
+
+    public double[] createAverageArraySideTwoStartingAt(int startingIndex){
+        double[] array = cutArrayTwo(startingIndex);
+        for(int i = startingIndex+1; i < array.length; i++){
+            array[i] = array[i]+array[i-1];
+        }
+        for(int i = startingIndex+1; i < array.length; i++){
+            array[i] = array[i]/(i-startingIndex);
+        }
+        return array;
+    }
+
+    public double[] createAverageArraySideThreeStartingAt(int startingIndex){
+        double[] array = cutArrayThree(startingIndex);
+        for(int i = startingIndex+1; i < array.length; i++){
+            array[i] = array[i]+array[i-1];
+        }
+        for(int i = startingIndex+1; i < array.length; i++){
+            array[i] = array[i]/(i-startingIndex);
+        }
+        return array;
+    }
+
+    public double[] createAverageArraySideFourStartingAt(int startingIndex){
+        double[] array = cutArrayFour(startingIndex);
+        for(int i = startingIndex+1; i < array.length; i++){
+            array[i] = array[i]+array[i-1];
         }
         for(int i = startingIndex+1; i < array.length; i++){
             array[i] = array[i]/(i-startingIndex);
@@ -309,24 +370,36 @@ public class GameHelper {
         double[][] array2 = new double[arraySize][1];
         double[][] array3 = new double[arraySize][1];
         double[][] array4 = new double[arraySize][1];
+        double[][] array5 = new double[arraySize][1];
+        double[][] array6 = new double[arraySize][1];
+        double[][] array7 = new double[arraySize][1];
+        double[][] array8 = new double[arraySize][1];
 
         for(int count = 0; count < arraySize; count++){
             array1[count][0] = game.getProbabilityArrayOnSideOne()[count];
+            array5[count][0] = game.getCutAverageArrayOnSpecificSide(1)[count];
         }for(int count = 0; count < arraySize; count++){
             array2[count][0] = game.getProbabilityArrayOnSideTwo()[count];
+            array6[count][0] = game.getCutAverageArrayOnSpecificSide(2)[count];
         }for(int count = 0; count < arraySize; count++){
             array3[count][0] = game.getProbabilityArrayOnSideThree()[count];
+            array7[count][0] = game.getCutAverageArrayOnSpecificSide(3)[count];
         }for(int count = 0; count < arraySize; count++){
             array4[count][0] = game.getProbabilityArrayOnSideFour()[count];
+            array8[count][0] = game.getCutAverageArrayOnSpecificSide(4)[count];
         }
 
         plot1.addPlot(array1);
+        plot1.addPlot(array5);
         plot1.plot();
         plot2.addPlot(array2);
+        plot2.addPlot(array6);
         plot2.plot();
         plot3.addPlot(array3);
+        plot3.addPlot(array7);
         plot3.plot();
         plot4.addPlot(array4);
+        plot4.addPlot(array8);
         plot4.plot();
     }
 

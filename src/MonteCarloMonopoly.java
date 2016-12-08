@@ -16,7 +16,7 @@ public class MonteCarloMonopoly {
     static GameHelper gh = new GameHelper();
 
     static int numberOfGames = 1000;
-    static int numOfRounds = 50000;
+    static int numOfRounds = 2;
     static int startingComparisonValue = 3000;
     static double[] probabilityArrayOnSideOne = new double[numOfRounds];
     static double[] probabilityArrayOnSideTwo = new double[numOfRounds];
@@ -28,6 +28,10 @@ public class MonteCarloMonopoly {
     static double[] averageArraySideFour = new double[numOfRounds];
     static double probSumSideOne=0,probSumSideTwo=0,probSumSideThree=0,probSumSideFour=0;
     static double averageSideOne,averageSideTwo,averageSideThree,averageSideFour;
+    static double[] cutAverageArraySideOne = new double[numOfRounds];
+    static double[] cutAverageArraySideTwo = new double[numOfRounds];
+    static double[] cutAverageArraySideThree = new double[numOfRounds];
+    static double[] cutAverageArraySideFour = new double[numOfRounds];
 
 
     public static void main(String[] args) throws Exception {
@@ -37,6 +41,15 @@ public class MonteCarloMonopoly {
         int moneyTransferred;
         int previousRoundNumWinsByOne;
         int highestNumWinsByOne = 0;
+
+        double cutSumSideOne = 0;
+        double cutSumSideTwo = 0;
+        double cutSumSideThree = 0;
+        double cutSumSideFour = 0;
+        double cutAverageSideOne = 0;
+        double cutAverageSideTwo = 0;
+        double cutAverageSideThree = 0;
+        double cutAverageSideFour = 0;
 
 
         java.util.Date dateStart = new Date();
@@ -141,7 +154,7 @@ public class MonteCarloMonopoly {
             //System.out.print("roundNum: " + roundNum + "  sum of wins per round: " + (playerOne.getNumOfWins() + playerTwo.getNumOfWins() + playerThree.getNumOfWins() + playerFour.getNumOfWins()));
             //System.out.println();
 
-            /*
+
             probSumSideOne = probSumSideOne + playerOne.getProbabilityToBuyOnSideOne();
             probSumSideTwo = probSumSideTwo + playerOne.getProbabilityToBuyOnSideOne();
             probSumSideThree = probSumSideThree + playerOne.getProbabilityToBuyOnSideThree();
@@ -156,16 +169,44 @@ public class MonteCarloMonopoly {
             averageArraySideTwo[roundNum-1] = averageSideTwo;
             averageArraySideThree[roundNum-1] = averageSideThree;
             averageArraySideFour[roundNum-1] = averageSideFour;
-            */
+
 
             probabilityArrayOnSideOne[roundNum-1] = playerOne.getProbabilityToBuyOnSideOne();
             probabilityArrayOnSideTwo[roundNum-1] = playerOne.getProbabilityToBuyOnSideTwo();
             probabilityArrayOnSideThree[roundNum-1] = playerOne.getProbabilityToBuyOnSideThree();
             probabilityArrayOnSideFour[roundNum-1] = playerOne.getProbabilityToBuyOnSideFour();
 
+
+            if(roundNum>startingComparisonValue){
+                cutSumSideOne = cutSumSideOne + playerOne.getProbabilityToBuyOnSideOne();
+                cutSumSideTwo = cutSumSideTwo + playerOne.getProbabilityToBuyOnSideTwo();
+                cutSumSideThree = cutSumSideThree + playerOne.getProbabilityToBuyOnSideThree();
+                cutSumSideFour = cutSumSideFour + playerOne.getProbabilityToBuyOnSideFour();
+
+                cutAverageSideOne = cutSumSideOne/(roundNum-startingComparisonValue);
+                cutAverageSideTwo = cutSumSideTwo/(roundNum-startingComparisonValue);
+                cutAverageSideThree = cutSumSideThree/(roundNum-startingComparisonValue);
+                cutAverageSideFour = cutSumSideFour/(roundNum-startingComparisonValue);
+
+
+                cutAverageArraySideOne[roundNum-1] = cutAverageSideOne;
+                cutAverageArraySideTwo[roundNum-1] = cutAverageSideTwo;
+                cutAverageArraySideThree[roundNum-1] = cutAverageSideThree;
+                cutAverageArraySideFour[roundNum-1] = cutAverageSideFour;
+            }else{
+                cutAverageArraySideOne[roundNum-1] = 0;
+                cutAverageArraySideTwo[roundNum-1] = 0;
+                cutAverageArraySideThree[roundNum-1] = 0;
+                cutAverageArraySideFour[roundNum-1] = 0;
+            }
+
             gh.adjustPlayerProbabilitiesToBuyImplementingFunnel(roundNum);
 
         }
+
+        System.out.println("P1 averages = side1 : " + averageArraySideOne[numOfRounds-1] + " side 2: " + averageArraySideTwo[numOfRounds-1] + " side 3: " + averageArraySideThree[numOfRounds-1] + " side 4: " + averageArraySideFour[numOfRounds-1]);
+        System.out.println("P1 cut averages = side1 : " + cutAverageArraySideOne[numOfRounds-1] + " side 2: " + cutAverageArraySideTwo[numOfRounds-1] + " side 3: " + cutAverageArraySideThree[numOfRounds-1] + " side 4: " + cutAverageArraySideFour[numOfRounds-1]);
+
 
         java.util.Date dateEnd = new Date();
         System.out.println("Start time: " + dateStart);
@@ -178,18 +219,19 @@ public class MonteCarloMonopoly {
             averageValueProbabilityArrayOnSideOne[index] = averageValueProbabilityArrayOnSideOne[index-1]/index;
         }*/
 
-        double[] testingArray = gh.createAverageArrayStartingAt(3000);
-
         gh.exportCSV(probabilityArrayOnSideOne);
-        /*gh.plotProbabilityArray(probabilityArrayOnSideOne);
-        gh.plotProbabilityArray(probabilityArrayOnSideTwo);
-        gh.plotProbabilityArray(probabilityArrayOnSideThree);
-        gh.plotProbabilityArray(probabilityArrayOnSideFour);*/
+
+        gh.generateTransitionMatrix();
+        gh.displayTransitionMatrix();
+
+        playerOne.
+
         gh.plotAllProbabilityArrays();
-        /*gh.plotProbabilityArray(averageArraySideOne);
+        gh.plotProbabilityArray(averageArraySideOne);
         gh.plotProbabilityArray(averageArraySideTwo);
         gh.plotProbabilityArray(averageArraySideThree);
-        gh.plotProbabilityArray(averageArraySideFour);*/
+        gh.plotProbabilityArray(averageArraySideFour);
+
     }
 
 
@@ -235,6 +277,22 @@ public class MonteCarloMonopoly {
             return averageArraySideFour;
         }else{
             System.out.println("invalid sideNum in getAverageArrayOnSpecificSide " + sideNum);
+            System.exit(0);
+        }
+        return null;
+    }
+
+    public double[] getCutAverageArrayOnSpecificSide(int sideNum){
+        if(sideNum == 1){
+            return cutAverageArraySideOne;
+        }else if(sideNum == 2){
+            return cutAverageArraySideTwo;
+        }else if(sideNum == 3){
+            return cutAverageArraySideThree;
+        }else if(sideNum == 4){
+            return cutAverageArraySideFour;
+        }else{
+            System.out.println("invalid sideNum in getCutAverageArrayOnSpecificSide " + sideNum);
             System.exit(0);
         }
         return null;

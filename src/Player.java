@@ -166,16 +166,10 @@ public class Player {
         probabilityToBuyOfTheWinnerOnSideThree = game.getRoundWinner().getProbabilityToBuyOnSideThree();
         probabilityToBuyOfTheWinnerOnSideFour = game.getRoundWinner().getProbabilityToBuyOnSideFour();
 
-        //double var = probabilityToBuy;
         probabilityToBuyOnSideOne = ai*probabilityToBuyOnSideOne + (1 - ai)*probabilityToBuyOfTheWinnerOnSideOne;
         probabilityToBuyOnSideTwo = ai*probabilityToBuyOnSideTwo + (1 - ai)*probabilityToBuyOfTheWinnerOnSideTwo;
         probabilityToBuyOnSideThree = ai*probabilityToBuyOnSideThree + (1 - ai)*probabilityToBuyOfTheWinnerOnSideThree;
         probabilityToBuyOnSideFour = ai*probabilityToBuyOnSideFour + (1 - ai)*probabilityToBuyOfTheWinnerOnSideFour;
-        /*if(abs(probabilityToBuy - var)>0.005) {
-            System.out.println("difference is larger than it should be?");
-            //state.displayOwnedAndOwnableArrays();
-            System.exit(0);
-        }*/
     }
 
     public void setCurrentSideOfBoard(){
