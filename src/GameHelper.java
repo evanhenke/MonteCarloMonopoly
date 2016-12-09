@@ -165,8 +165,12 @@ public class GameHelper {
             adjustProbabilitiesWithFunnelOfSize(.025,roundNum);
         }else if(roundNum >= 10000 && roundNum < 11000){
             adjustProbabilitiesWithFunnelOfSize(.01,roundNum);
-        }else{
+        }else if(roundNum >= 11000 && roundNum < 12000){
             adjustProbabilitiesWithFunnelOfSize(.005,roundNum);
+        }else if(roundNum >= 12000 && roundNum < 13000){
+            adjustProbabilitiesWithFunnelOfSize(.001,roundNum);
+        }else{
+            adjustProbabilitiesWithFunnelOfSize(.0005,roundNum);
         }
     }
 
