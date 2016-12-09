@@ -17,24 +17,24 @@ This is abstract text: This simple document shows very basic features of
 
 \section{Introduction}
 
-Whether you enjoy the game or not, everyone in their lifetime has played a game of \textit{Monopoly}.  It has been around for over 70 years and in that time has become one of the world’s most played and most well known board games.  The game pits a few friends against each other to see who can make the most money.  Every player has a pawn that they will move around the board, the distance each pawn moves depends on the outcome of a roll of two dice.  Naturally, this causes the game to rely heavily on randomness because a player can choose if they want to purchase a property, but they cannot directly choose which property they are going to buy.  The goal of 
+Whether you enjoy the game or not, everyone in their lifetime has played a game of \textit{Monopoly}.  It has been around for over 70 years and in that time has become one of the world’s most played and most well known board games.  The game pits a few friends against each other to see who can make the most money.  Every player has a pawn that they will move around the board, the distance each pawn moves depends on the outcome of a roll of two dice.  Naturally, this causes the game to rely heavily on randomness because a player can choose if they want to purchase a property, but they cannot directly choose which property they are going to buy.  Much of the game can be boiled down to only one, true question each player needs to answer: "Should I buy the property I just landed on?"  That is the goal, when a player lands on a property, should they buy it?  More mathematically speaking, at what probability should the player purchase a property, knowing which side of the board they are on.
 
 \subsection{History and Gameplay}
 
 People have been playing \textit{Monopoly}, or games similar to it, for close to a century.  But most people are unaware that \textit{Monopoly} is a derivative of a different board game called \textit{The Landlord’s Game}.  Originally created by a woman named Elizabeth Magie, \textit{The Landlord’s Game} was made as an education tool.  Magie was a Georgist, meaning she believed in the philosophies of Henry George whose pinnacle belief was that any economic value that is derived from land should be divided equally among all members of society.  She believed this could be difficult to teach or explain, therefore she decided to create a board game to demonstrate the process of land grabbing, the practice of large-scale purchase of land for economic profit.
 
-\textit{Monopoly} is advertised as a brightly-colored, fun, family game where to goal is to have the most money at the end of the game.  But it becomes obvious while playing that getting the most money will come at the expense of everyone else who is playing.  That is what Magie meant to show, and more specifically that rent strengthens the landlord at the expense of the tenant.
+\textit{Monopoly} is not advertised as a sinister game, it is portrayed as vibrantly-colored, fun, family game where to goal just happens to be to have the most money at the end of the game.  But it becomes obvious while playing that aquiring the most money will come at the expense of everyone else who is playing.  That is what Magie meant to show, but more specifically that rent strengthens the landlord at the expense of the tenant.
 
 
 \begin{figure}
     \centering
     \includegraphics[width=4.0in]{landlordsgame}
-    \caption{Early rendition of The Landlord's Game}
+    \caption{Early rendition of \textit{The Landlord's Game}}
     \label{landlordsgame_image}
 \end{figure}
 
 
-Magie’s game was patented in 1904 but Parker Brothers refused to produce the game due to its complexity.  This did not stop the game from spreading and within the next thirty years many similar games were produced.  Most notably, \textit{Monopoly}, which was produced by Parker Brothers was claimed to have been created by a man named Charles Darrow, who gave no credit to Magie and had his name printed within the rules as the sole creator.
+Magie had her game patented in 1904 and she approached Parker Brothers to produce it.  Parker Brothers refused due to the games complexity but she was determined and she was able to have her game produced by smaller publishing companies and over time the game spread. But, with popularity comes imitation, and soon enough many others would try to replicate The Landlord’s Game and its success.  The most notably being \textit{Monopoly}, which ironically, was produced by Parker Brothers and claimed to have been created solely by a man named Charles Darrow.
 
 Parker Brothers began production of \textit{Monopoly} in 1935, this is when it began to take the form that most people recognize, with the iconic mascot Rich Uncle Pennybags following a few years later.  The board has nine spaces on each side with one space on each corner: Go, Jail, Go to Jail, and Free Parking, for a total of 40 spaces.  Each space on the board is different, there are five properties available for player purchase on the first and four side and six on the second and third side.  There are two sets of color coded properties on each side of the board and if one player owns both or all three properties in the set, then they are said to have a monopoly at that location on the board.  There is also one utility property on each side of the board as well as three Chance spaces, three Community Chest spaces, and two Tax spaces scattered around the board.  Also in the box are 32 house pieces and 12 hotel pieces.
 
@@ -46,23 +46,29 @@ There a few other important spaces on the board.  On each side there will be one
 	
 If a player lands and an owned property and does not have the funds to pay the owner, they can mortgage their properties.  This means they gain a small sum of money determined by the property that was mortgaged.  A mortgaged property is still owned by the same player, but the owner cannot gain income from that property though; in other words, if a player lands on a mortgaged property, they are not required to pay the owner.
 
-This covers the main rules of the game, but there is a large component of the game that allows players to trade with each other.  This is 
+A large portion of the game that is not governed by the rule book is player trading.  On a player’s turn, they can propose a trade with another player for properties or cash.  There are no true stipulations to how this trade is conducted and no player is required to accept an offer.  This gives each game of Monopoly more variety but is extremely difficult to model due to the individuality of players.
 
 \section{The Simulation}
 
-There are a number of things that complicate simulating \textit{Monopoly} that does not directly affect the game’s main function, which is to roll dice to move around the board and to purchase properties.  Therefore houses, hotels, Community Chests cards, Chance cards, property auctions, mortgaging, and trading have been removed to give a more bare-bones approach.
+There are a number of things that complicate simulating \textit{Monopoly} that does not directly affect the game’s main function, which is to roll dice to move around the board and to purchase properties.  Therefore houses, hotels, Community Chest cards, Chance cards, property auctions, mortgaging, and trading have been removed to give a more bare-bones approach.
 
 \subsection{Monte Carlo Methods}
 
-\subsection{Markov Chains}
+One will notice that there are many conditionals within the rules, which can cause difficulties with the modeling approach, and this is why Monte Carlo simulations will be beneficial.  Our goal is to find some optimal probability to purchase a property on the board, but this is problematic because it depends on a very large number of factors, including each individual player’s probability to buy as well as which states are available, how much money the current player has, etc.  In \textit{Monopoly}, these previously mentioned variables rely, directly or indirectly, upon the probability of being at a specific spot on the board at a certain time.  A textbook optimization problem, in most instances, could be solved using some arithmetical approximation akin to Newton's Method.  But in this case a distinct function, \mathit{f} is not apparent, let alone finding it's derivative.
+
+	Monte Carlo simulations stress that a mathematical model can be solved using random numbers, which lends itself perfectly to this predicament.  Implementing the idea that the use of random numbers can lead to a non-random solution, we can begin to simulate games of Monopoly with random purchasing probabilities in the hopes to find optimal purchase strategies.
+
+\subsection{Markov Chains and Finite-State Machines}
+
+So far this is an extremely general starting point, it has been established that there are going to be a huge number of games played, now what?  Following the rules in playing order says that the first thing a player is going to do is to roll two dice to move their pawn around the board.  So there needs to be a way to move their pawn.
 
 \subsection{Bringing It All Together}
 
 The simulation is broken into two parts, single games and rounds.  A game, as the name implies, is only one game with a single winner.  Whereas a round constitutes playing one thousand games.  Every player will have a counter that will increase with how many games they have won per round.
 
-Each game will start with four players, simply named Player One, Player Two, Player Three, and Player Four.  Player One is the player we will be optimizing around.  Each player will start on Go with 1200 dollars and an initial probability to buy that is randomly chosen between zero and one for each side of the board.  The players will cycle around the board using the transition matrix p, given by the figure later in this paper somewhere not sure where yet, the first and fourth sides of the board have five available properties to purchase and the second and third sides have six properties to purchase.  The simulation contains two arrays, one that tells if the space is available for purchase and the other array stores the owner of the property if it is owned.  When a player lands on a property the game will check both of these arrays for an owner, if the property has no owner then the player will buy the property with that player’s respective probability to buy on that side of the board.  If the property is owned the player will pay the owner an amount according to the side of the board as well as how many properties the owner has in their possession.  Each player will have a turn and if they land on a property that they cannot afford, they are removed from the game and their owned properties are returned to their unowned state and are available for purchase by the remaining players.  This will go on until one player wins.  
+Each game will start with four players, simply named Player One, Player Two, Player Three, and Player Four.  Player One is the player we will be optimizing around.  Each player will start on Go with 1200 dollars and an initial probability to buy that is randomly chosen between zero and one for each side of the board, with the exception that Player One will have a static initial probability to buy on each side of .50.  The players will cycle around the board using the transition matrix p, given by the figure later in this paper somewhere not sure where yet, the first and fourth sides of the board have five available properties to purchase and the second and third sides have six properties to purchase.  The simulation contains two arrays, one that tells if the space is available for purchase and the other array stores the owner of the property if it is owned.  When a player lands on a property the game will check both of these arrays for an owner, if the property has no owner then the player will buy the property with that player’s respective probability to buy on that side of the board.  If the property is owned the player will pay the owner an amount according to the side of the board as well as how many properties the owner has in their possession.  Each player will have a turn and if they land on a property that they cannot afford, they are removed from the game and their owned properties are returned to their unowned state and are available for purchase by the remaining players.  This will go on until one player wins.  
 
-Once a round is complete whichever player has the most wins is deemed the round winner.  At this point the winner’s probability to win will be saved and will be be adjusted according to the following:
+Once a round is complete whichever player has the most wins is deemed the round winner.  At this point the winner’s probability to win will be saved and the probabilities of Player One will be be adjusted according to the following weighted adjustment:
 
 \begin{equation}
     \label{probability_adjustment}
@@ -71,13 +77,6 @@ Once a round is complete whichever player has the most wins is deemed the round 
 
 Where $\alpha_i$ is a constant that will be varied when the simulation is ran multiple times.
 
-$
-\setcounter{MaxMatrixCols}{20}
-\begin{bmatrix}
-0.0& 0.0& 0.028& 0.056& 0.083& 0.111& 0.139& 0.167& 0.139& 0.111& 0.083& 0.056& 0.028& 0.0&...& 0.0\\
-0.0& 0.0& 0.028& 0.056& 0.083& 0.111& 0.139& 0.167& 0.139& 0.111& 0.083& 0.056& 0.028& 0.0&...& 0.0\\
-\end{bmatrix}
-$
 \begin{center}
 \includegraphics[width = \textwidth]{average}
 \end{center}
