@@ -71,24 +71,26 @@ A Markov Chain is a stochastic process that is composed by a set of states that 
     \label{example_markov_chain}
 \end{figure}
 
-A Markov Chain can be envisioned as a group of points on a graph, called \textit{states} each state has \textit{transition probabilities} associated with it that will dictate the probability of transitioning from the current state to the specific state.  For example,  $p_{ij}$ would be the probability to go from state \textit{i} to state \textit{j}.  All of these probabilities are part of a \textit{Transition Matrix}, P.
+A Markov Chain can be envisioned as a group of points on a graph, called \textit{states} each state has \textit{transition probabilities} associated with it that will dictate the probability of transitioning from the current state to the specific state.  For example,  $p_{ij}$ would be the probability to go from state \textit{i} to state \textit{j}.  All of these probabilities are part of a \textit{Transition Matrix}, P where:
 
 $$
-\centering
 P=
 \begin{bmatrix}
-0.1 & 0.2 & 0.6 & 0.1\\
-0.2 & 0.3 & 0.3 & 0.2\\
-0.0 & 0.9 & 0.1 & 0.0\\
-0.1 & 0.2 & 0.3 & 0.4
+p_{00} & p_{01} & p_{02} & ... & p_{0j}\\
+p_{10} & p_{11} & p_{12} & ... & p_{1j}\\
+p_{20} & p_{21} & p_{22} & ... & p_{2j}\\
+... & ... & ... & ... & ...\\
+p_{i0} & p_{i1} & p_{i2} & ... & p_{ij}
 \end{bmatrix}
 $$
 
-P in this example, being the transition matrix for Figure 2 above
+At a high-level, a \textit{finite-state machine} is a model used for software design that, as the name implies, assumes a that the program will have a finite amount of states and that it will only be in one state at a time.  For example, if someone needed to model the movement of a door then that person could define the entire system of the door as a finite-state machine with only two states: the door is open or the door is closed.  And then there is some sort of function or method that will cause the finite-state machine to switch states.  In this example, when the door is in the closed state it would most likely have an \textit{open_door()} method and the opened state would have a corresponding \textit{close_door()} method.
+
+Relating these two topics back to \textit{Monopoly}
 
 \subsection{Bringing It All Together}
 
-The simulation is broken into two parts, single games and rounds.  A game, as the name implies, is only one game with a single winner.  Whereas a round constitutes playing one thousand games.  Every player will have a counter that will increase with how many games they have won per round.
+The simulation is broken into three parts: single games, rounds, and overall averaging.  A game, as the name implies, is only one game with a single winner.  Whereas a round constitutes playing one thousand games.  Every player will have a counter that will increase with how many games they have won per round.
 
 Each game will start with four players, simply named Player One, Player Two, Player Three, and Player Four.  Player One is the player we will be optimizing around.  Each player will start on Go with 1200 dollars and an initial probability to buy that is randomly chosen between zero and one for each side of the board, with the exception that Player One will have a static initial probability to buy on each side of .50.  The players will cycle around the board using the transition matrix p, given by the figure later in this paper somewhere not sure where yet, the first and fourth sides of the board have five available properties to purchase and the second and third sides have six properties to purchase.  The simulation contains two arrays, one that tells if the space is available for purchase and the other array stores the owner of the property if it is owned.  When a player lands on a property the game will check both of these arrays for an owner, if the property has no owner then the player will buy the property with that player’s respective probability to buy on that side of the board.  If the property is owned the player will pay the owner an amount according to the side of the board as well as how many properties the owner has in their possession.  Each player will have a turn and if they land on a property that they cannot afford, they are removed from the game and their owned properties are returned to their unowned state and are available for purchase by the remaining players.  This will go on until one player wins.  
 
