@@ -54,7 +54,7 @@ There are a number of things that complicate simulating \textit{Monopoly} that d
 
 \subsection{Monte Carlo Methods}
 
-One will notice that there are many conditionals within the rules, which can cause difficulties with the modeling approach, and this is why Monte Carlo simulations will be beneficial.  Our goal is to find some optimal probability to purchase a property on the board, but this is problematic because it depends on a very large number of factors, including each individual player’s probability to buy as well as which states are available, how much money the current player has, etc.  In \textit{Monopoly}, these previously mentioned variables rely, directly or indirectly, upon the probability of being at a specific spot on the board at a certain time.  A textbook optimization problem, in most instances, could be solved using some arithmetical approximation akin to Newton's Method.  But in this case a distinct function, \mathit{f} is not apparent, let alone finding it's derivative.
+One will notice that there are many conditionals within the rules, which can cause difficulties with the modeling approach, and this is why Monte Carlo simulations will be beneficial.  Our goal is to find some optimal probability to purchase a property on the board, but this is problematic because it depends on a very large number of factors, including each individual player’s probability to buy as well as which states are available, how much money the current player has, etc.  In \textit{Monopoly}, these previously mentioned variables rely, directly or indirectly, upon the probability of being at a specific spot on the board at a certain time.  A textbook optimization problem, in most instances, could be solved using some arithmetical approximation akin to Newton's Method.  But in this case a distinct function, \textit{f} is not apparent, let alone finding it's derivative.
 
 Monte Carlo simulations stress that a mathematical model can be solved using random numbers, which lends itself perfectly to this predicament.  Implementing the idea that the use of random numbers can lead to a non-random solution, we can begin to simulate games of Monopoly with random purchasing probabilities in the hopes to find optimal purchase strategies.
 
@@ -62,7 +62,29 @@ Monte Carlo simulations stress that a mathematical model can be solved using ran
 
 So far this is an extremely general starting point, it has been established that there are going to be a huge number of games played, now what?  Following the rules in playing order says that the first thing a player is going to do is to roll two dice to move their pawn around the board, so there must be a way to emulate the movements of each pawn.
 
-A
+A Markov Chain is a stochastic process that is composed by a set of states that follow the \textit{Markov Property}, which can also be described as being \textit{memoryless}.  In terms of a Markov Chain, this means that the future state depends only on the current state and not the \textit{history}, or previous set of states.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=4.0in]{betamarkovchain}
+    \caption{Example of a Markov Chain with four states and associated probabilities to change state}
+    \label{example_markov_chain}
+\end{figure}
+
+A Markov Chain can be envisioned as a group of points on a graph, called \textit{states} each state has \textit{transition probabilities} associated with it that will dictate the probability of transitioning from the current state to the specific state.  For example,  $p_{ij}$ would be the probability to go from state \textit{i} to state \textit{j}.  All of these probabilities are part of a \textit{Transition Matrix}, P.
+
+$$
+\centering
+P=
+\begin{bmatrix}
+0.1 & 0.2 & 0.6 & 0.1\\
+0.2 & 0.3 & 0.3 & 0.2\\
+0.0 & 0.9 & 0.1 & 0.0\\
+0.1 & 0.2 & 0.3 & 0.4
+\end{bmatrix}
+$$
+
+P in this example, being the transition matrix for Figure 2 above
 
 \subsection{Bringing It All Together}
 
