@@ -120,31 +120,6 @@ public class GameHelper {
         return p4;
     }
 
-    /*public void adjustPlayerProbabilitiesToBuyImplementingFunnel(int roundNum){
-        int numOfRounds = game.getNumOfRounds();
-        if((double)roundNum < (double)(numOfRounds/10)) {
-            adjustProbabilitiesBeforeFunnel();
-        }else if((double)roundNum >= (double)(numOfRounds/10) && (double)roundNum <= (double)(numOfRounds/5)){
-            adjustProbabilitiesWithFunnelOfSize(.4,roundNum);
-        }else if((double)roundNum >= (double)(numOfRounds/5) && (double)roundNum <= (double)(numOfRounds*3/10)) {
-            adjustProbabilitiesWithFunnelOfSize(.3,roundNum);
-        }else if((double)roundNum >= (double)(numOfRounds*3/10) && (double)roundNum <= (double)(numOfRounds*2/5)){
-            adjustProbabilitiesWithFunnelOfSize(.2,roundNum);
-        }else if((double)roundNum >= (double)(numOfRounds*2/5) && (double)roundNum <= (double)(numOfRounds/2)){
-            adjustProbabilitiesWithFunnelOfSize(.1,roundNum);
-        }else if((double)roundNum >= (double)(numOfRounds/2) && (double)roundNum <= (double)(numOfRounds*3/5)) {
-            adjustProbabilitiesWithFunnelOfSize(.075,roundNum);
-        }else if((double)roundNum >= (double)(numOfRounds*3/5) && (double)roundNum <= (double)(numOfRounds*7/10)){
-            adjustProbabilitiesWithFunnelOfSize(.05,roundNum);
-        }else if((double)roundNum >= (double)(numOfRounds*7/10) && (double)roundNum <= (double)(numOfRounds*4/5)) {
-            adjustProbabilitiesWithFunnelOfSize(.025,roundNum);
-        }else if((double)roundNum >= (double)(numOfRounds*4/5) && (double)roundNum <= (double)(numOfRounds*9/10)){
-            adjustProbabilitiesWithFunnelOfSize(.01,roundNum);
-        }else{
-            adjustProbabilitiesWithFunnelOfSize(.005,roundNum);
-        }
-    }*/
-
     public void adjustPlayerProbabilitiesToBuyImplementingFunnel(int roundNum){
         int numOfRounds = game.getNumOfRounds();
         if(roundNum < 1000) {
@@ -203,8 +178,8 @@ public class GameHelper {
         game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(threeMin,threeMax,3);
         game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(fourMin,fourMax,4);
         if(roundNum>9000){
-            System.out.println("oneMin: " + oneMin + " and oneMax: " + oneMax + " twoMin: " + twoMin + " twoMax: " + twoMax + " threeMin: " + threeMin + " threeMax: " + threeMax + " fourMin: " + fourMin + " fourMax: " + fourMax);
-            System.out.println("Player 2 prob to buy on side 1: " + game.getPlayerByID(2).getProbabilityToBuyOnSideOne() + " side 2: " + game.getPlayerByID(2).getProbabilityToBuyOnSideTwo() + " side 3: " + game.getPlayerByID(2).getProbabilityToBuyOnSideThree() + " side 4: " + game.getPlayerByID(2).getProbabilityToBuyOnSideFour());
+            //System.out.println("oneMin: " + oneMin + " and oneMax: " + oneMax + " twoMin: " + twoMin + " twoMax: " + twoMax + " threeMin: " + threeMin + " threeMax: " + threeMax + " fourMin: " + fourMin + " fourMax: " + fourMax);
+            //System.out.println("Player 2 prob to buy on side 1: " + game.getPlayerByID(2).getProbabilityToBuyOnSideOne() + " side 2: " + game.getPlayerByID(2).getProbabilityToBuyOnSideTwo() + " side 3: " + game.getPlayerByID(2).getProbabilityToBuyOnSideThree() + " side 4: " + game.getPlayerByID(2).getProbabilityToBuyOnSideFour());
         }
     }
 

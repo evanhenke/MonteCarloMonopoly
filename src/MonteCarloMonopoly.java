@@ -18,6 +18,7 @@ public class MonteCarloMonopoly {
     static int numberOfGames = 1000;
     static int numOfRounds = 40000;
     static int startingComparisonValue = 3000;
+    static int totalruns = 100;
     static double[] probabilityArrayOnSideOne = new double[numOfRounds];
     static double[] probabilityArrayOnSideTwo = new double[numOfRounds];
     static double[] probabilityArrayOnSideThree = new double[numOfRounds];
@@ -32,6 +33,10 @@ public class MonteCarloMonopoly {
     static double[] cutAverageArraySideTwo = new double[numOfRounds];
     static double[] cutAverageArraySideThree = new double[numOfRounds];
     static double[] cutAverageArraySideFour = new double[numOfRounds];
+    static double[] averageOverallProbabilityValueSideOne = new double[totalruns];
+    static double[] averageOverallProbabilityValueSideTwo = new double[totalruns];
+    static double[] averageOverallProbabilityValueSideThree = new double[totalruns];
+    static double[] averageOverallProbabilityValueSideFour = new double[totalruns];
 
 
     public static void main(String[] args) throws Exception {
@@ -54,163 +59,162 @@ public class MonteCarloMonopoly {
 
         java.util.Date dateStart = new Date();
 
-        for (int roundNum = 1; roundNum <= numOfRounds; roundNum++) {
-            //System.out.println("-------------------------  Round Number: " + roundNum + "  -------------------------");
-            previousRoundNumWinsByOne = numWinsByOne;
+        for (int overallCount = 0; overallCount < totalruns; overallCount++) {
+            for (int roundNum = 1; roundNum <= numOfRounds; roundNum++) {
+                //System.out.println("-------------------------  Round Number: " + roundNum + "  -------------------------");
+                previousRoundNumWinsByOne = numWinsByOne;
 
-            playerOne.resetNumPlayerWins();
-            playerTwo.resetNumPlayerWins();
-            playerThree.resetNumPlayerWins();
-            playerFour.resetNumPlayerWins();
-            playerTwo.randomizeProbabilityToBuyOnEachSide();
-            playerThree.randomizeProbabilityToBuyOnEachSide();
-            playerFour.randomizeProbabilityToBuyOnEachSide();
+                playerOne.resetNumPlayerWins();
+                playerTwo.resetNumPlayerWins();
+                playerThree.resetNumPlayerWins();
+                playerFour.resetNumPlayerWins();
+                playerTwo.randomizeProbabilityToBuyOnEachSide();
+                playerThree.randomizeProbabilityToBuyOnEachSide();
+                playerFour.randomizeProbabilityToBuyOnEachSide();
 
-            for (int n = 1; n <= numberOfGames; n++) {
-                //System.out.println("%%%%%%%%%%  Game Number " + n + " %%%%%%%%%%");
-                PlayerArray.add(playerOne);
-                PlayerArray.add(playerTwo);
-                PlayerArray.add(playerThree);
-                PlayerArray.add(playerFour);
+                for (int n = 1; n <= numberOfGames; n++) {
+                    //System.out.println("%%%%%%%%%%  Game Number " + n + " %%%%%%%%%%");
+                    PlayerArray.add(playerOne);
+                    PlayerArray.add(playerTwo);
+                    PlayerArray.add(playerThree);
+                    PlayerArray.add(playerFour);
 
-                Collections.shuffle(PlayerArray);
-                //gh.displayPlayerOrder(PlayerArray);
+                    Collections.shuffle(PlayerArray);
+                    //gh.displayPlayerOrder(PlayerArray);
 
-                state.resetOwnedAndOwnableArrays();
-                playerOne.resetPlayer();
-                playerTwo.resetPlayer();
-                playerThree.resetPlayer();
-                playerFour.resetPlayer();
+                    state.resetOwnedAndOwnableArrays();
+                    playerOne.resetPlayer();
+                    playerTwo.resetPlayer();
+                    playerThree.resetPlayer();
+                    playerFour.resetPlayer();
 
-                //state.displayOwnedAndOwnableArrays();
-
-                while (PlayerArray.size() > 1) {
-                    for (Player player : PlayerArray) {
-                        currentPlayer = player;
-                        //System.out.println("******Start of player " + player.getPlayerID() + "'s turn ******");
-                        //System.out.println("Money: " + player.getMoney() + "  Current State: " + player.getState() + "  Num Properties owned: " + player.getNumPropertiesOwned());
-                        player.move();
-                        //System.out.println("Player moved to new state: " + player.getState());
-                        gh.accountForPlayerPassingGo();
-                        currentPlayerState = player.getState();
-
-                        if (state.stateIsOwnableAtIndex(currentPlayerState) && player.canAffordProperty()) {
-                            //System.out.println(player.getPlayerID() + " is on " + player.getState() + " and it is ownable and player has enough money to purchase it");
-                            if (strategy.shouldPlayerBuy(player)) {
-                                gh.propertyPurchasedFromBank(player);
-                            }else {
-                                //System.out.println("Player " + player.getPlayerID() + " decided not to buy");
-                            }
-                        } else if (state.stateIsOwnedAtIndex(currentPlayerState)) {
-                            ownerID = state.getIsStateOwnedIndexAt(currentPlayerState);
-                            //System.out.println(player.getPlayerID() + " has landed on an owned state");
-
-                            moneyTransferred = gh.setAmountOfMoneyToBeTransferred();
-                            player.loseAmount(moneyTransferred);
-
-                            if (!player.isPlaying()) {
-                                //System.out.println("This causes player " + player.getPlayerID() + " to lose, updating owned and ownable arrays:");
-                                state.updateOwnedAndOwnableDueToPlayerLoss(player.getPlayerID());
-                                //state.displayOwnedAndOwnableArrays();
-                            }
-
-                            gh.payPlayer(moneyTransferred);
-                        }
-                    }
-                    //System.out.println();
-
-                    PlayerArray = gh.adjustPlayerArrayInCaseOfPlayerLoss(PlayerArray);
-
-                    if (PlayerArray.size() == 1) {
-                        PlayerArray.get(0).increaseNumberOfWins();
-                    }else if(PlayerArray.size() == 0){
-                        System.out.println("WHAT THE FUCK HOW");
-                        state.displayOwnedAndOwnableArrays();
-                        System.exit(0);
-                    }
-                    //System.out.println("Each player has had a turn, new owned and ownable arrarys are: ");
                     //state.displayOwnedAndOwnableArrays();
-                    //System.out.println();
+
+                    while (PlayerArray.size() > 1) {
+                        for (Player player : PlayerArray) {
+                            currentPlayer = player;
+                            //System.out.println("******Start of player " + player.getPlayerID() + "'s turn ******");
+                            //System.out.println("Money: " + player.getMoney() + "  Current State: " + player.getState() + "  Num Properties owned: " + player.getNumPropertiesOwned());
+                            player.move();
+                            //System.out.println("Player moved to new state: " + player.getState());
+                            gh.accountForPlayerPassingGo();
+                            currentPlayerState = player.getState();
+
+                            if (state.stateIsOwnableAtIndex(currentPlayerState) && player.canAffordProperty()) {
+                                //System.out.println(player.getPlayerID() + " is on " + player.getState() + " and it is ownable and player has enough money to purchase it");
+                                if (strategy.shouldPlayerBuy(player)) {
+                                    gh.propertyPurchasedFromBank(player);
+                                } else {
+                                    //System.out.println("Player " + player.getPlayerID() + " decided not to buy");
+                                }
+                            } else if (state.stateIsOwnedAtIndex(currentPlayerState)) {
+                                ownerID = state.getIsStateOwnedIndexAt(currentPlayerState);
+                                //System.out.println(player.getPlayerID() + " has landed on an owned state");
+
+                                moneyTransferred = gh.setAmountOfMoneyToBeTransferred();
+                                player.loseAmount(moneyTransferred);
+
+                                if (!player.isPlaying()) {
+                                    //System.out.println("This causes player " + player.getPlayerID() + " to lose, updating owned and ownable arrays:");
+                                    state.updateOwnedAndOwnableDueToPlayerLoss(player.getPlayerID());
+                                    //state.displayOwnedAndOwnableArrays();
+                                }
+
+                                gh.payPlayer(moneyTransferred);
+                            }
+                        }
+                        //System.out.println();
+
+                        PlayerArray = gh.adjustPlayerArrayInCaseOfPlayerLoss(PlayerArray);
+
+                        if (PlayerArray.size() == 1) {
+                            PlayerArray.get(0).increaseNumberOfWins();
+                        } else if (PlayerArray.size() == 0) {
+                            System.out.println("WHAT THE FUCK HOW");
+                            state.displayOwnedAndOwnableArrays();
+                            System.exit(0);
+                        }
+                        //System.out.println("Each player has had a turn, new owned and ownable arrarys are: ");
+                        //state.displayOwnedAndOwnableArrays();
+                        //System.out.println();
+                    }
+
+                    PlayerArray.clear();
                 }
 
-                PlayerArray.clear();
+                roundWinner = gh.getRoundWinner();
+
+                //System.out.println();
+                //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuyOnSideOne() + "  P2 prob to buy: " + playerTwo.getProbabilityToBuyOnSideOne() + "  P3 prob to buy: " + playerThree.getProbabilityToBuyOnSideOne() + "  P4 prob to buy: " + playerFour.getProbabilityToBuyOnSideOne() + "  roundnum: "+ roundNum + "  roundWinner: player " + roundWinner.getPlayerID());
+
+                //System.out.println("roundNum: " + roundNum + "  roundWinner: " + roundWinner.getPlayerID() + " p1 prob side 1: " + playerOne.getProbabilityToBuyOnSideOne() + " p1 prob side 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " p1 prob side 3: " + playerOne.getProbabilityToBuyOnSideThree() + "  p1 prob side 4: " + playerOne.getProbabilityToBuyOnSideFour() + "  p2 prob side 1: " + playerTwo.getProbabilityToBuyOnSideOne() + " p2 prob side 2: " + playerTwo.getProbabilityToBuyOnSideTwo() + " p2 prob side 3: " + playerTwo.getProbabilityToBuyOnSideThree() + " p2 prob side 4: " + playerTwo.getProbabilityToBuyOnSideFour() + " p3 prob side 1: " + playerThree.getProbabilityToBuyOnSideOne() + " p3 prob side 2: " + playerThree.getProbabilityToBuyOnSideTwo() + " p3 prob side 3: " + playerThree.getProbabilityToBuyOnSideThree() + " p3 prob side 4: " + playerThree.getProbabilityToBuyOnSideFour() + " p4 prob side 1: " + playerFour.getProbabilityToBuyOnSideOne() + " p4 prob side 2: " + playerFour.getProbabilityToBuyOnSideTwo() + " p4 prob side 3: " + playerFour.getProbabilityToBuyOnSideThree() + " p4 prob side 4: " + playerFour.getProbabilityToBuyOnSideFour() + " num wins 1: " + playerOne.getNumOfWins() + " num wins 2: " + playerTwo.getNumOfWins() + " num wins 3: " + playerThree.getNumOfWins() + " num wins 4: " + playerFour.getNumOfWins());
+                //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuy() + "    roundNum: " + roundNum);
+
+                //System.out.println("P1 wins = " + playerOne.getNumOfWins() + " P2 wins = " + playerTwo.getNumOfWins() + " P3 wins = " + playerThree.getNumOfWins() + " P4 wins = " + playerFour.getNumOfWins());
+
+                playerOne.adjustProbabilityToBuy();
+
+                numWinsByOne = playerOne.getNumOfWins();
+                playerOne.adjustProbabilityToBuy();
+
+                //System.out.print("roundNum: " + roundNum + "  sum of wins per round: " + (playerOne.getNumOfWins() + playerTwo.getNumOfWins() + playerThree.getNumOfWins() + playerFour.getNumOfWins()));
+                //System.out.println();
+
+
+                probSumSideOne = probSumSideOne + playerOne.getProbabilityToBuyOnSideOne();
+                probSumSideTwo = probSumSideTwo + playerOne.getProbabilityToBuyOnSideOne();
+                probSumSideThree = probSumSideThree + playerOne.getProbabilityToBuyOnSideThree();
+                probSumSideFour = probSumSideFour + playerOne.getProbabilityToBuyOnSideFour();
+
+                averageSideOne = probSumSideOne / roundNum;
+                averageSideTwo = probSumSideTwo / roundNum;
+                averageSideThree = probSumSideThree / roundNum;
+                averageSideFour = probSumSideFour / roundNum;
+
+                averageArraySideOne[roundNum - 1] = averageSideOne;
+                averageArraySideTwo[roundNum - 1] = averageSideTwo;
+                averageArraySideThree[roundNum - 1] = averageSideThree;
+                averageArraySideFour[roundNum - 1] = averageSideFour;
+
+
+                probabilityArrayOnSideOne[roundNum - 1] = playerOne.getProbabilityToBuyOnSideOne();
+                probabilityArrayOnSideTwo[roundNum - 1] = playerOne.getProbabilityToBuyOnSideTwo();
+                probabilityArrayOnSideThree[roundNum - 1] = playerOne.getProbabilityToBuyOnSideThree();
+                probabilityArrayOnSideFour[roundNum - 1] = playerOne.getProbabilityToBuyOnSideFour();
+
+
+                if (roundNum > startingComparisonValue) {
+                    cutSumSideOne = cutSumSideOne + playerOne.getProbabilityToBuyOnSideOne();
+                    cutSumSideTwo = cutSumSideTwo + playerOne.getProbabilityToBuyOnSideTwo();
+                    cutSumSideThree = cutSumSideThree + playerOne.getProbabilityToBuyOnSideThree();
+                    cutSumSideFour = cutSumSideFour + playerOne.getProbabilityToBuyOnSideFour();
+
+                    cutAverageSideOne = cutSumSideOne / (roundNum - startingComparisonValue);
+                    cutAverageSideTwo = cutSumSideTwo / (roundNum - startingComparisonValue);
+                    cutAverageSideThree = cutSumSideThree / (roundNum - startingComparisonValue);
+                    cutAverageSideFour = cutSumSideFour / (roundNum - startingComparisonValue);
+
+
+                    cutAverageArraySideOne[roundNum - 1] = cutAverageSideOne;
+                    cutAverageArraySideTwo[roundNum - 1] = cutAverageSideTwo;
+                    cutAverageArraySideThree[roundNum - 1] = cutAverageSideThree;
+                    cutAverageArraySideFour[roundNum - 1] = cutAverageSideFour;
+                } else {
+                    cutAverageArraySideOne[roundNum - 1] = 0;
+                    cutAverageArraySideTwo[roundNum - 1] = 0;
+                    cutAverageArraySideThree[roundNum - 1] = 0;
+                    cutAverageArraySideFour[roundNum - 1] = 0;
+                }
+
+                gh.adjustPlayerProbabilitiesToBuyImplementingFunnel(roundNum);
+
             }
 
-            roundWinner = gh.getRoundWinner();
-
-            //System.out.println();
-            //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuyOnSideOne() + "  P2 prob to buy: " + playerTwo.getProbabilityToBuyOnSideOne() + "  P3 prob to buy: " + playerThree.getProbabilityToBuyOnSideOne() + "  P4 prob to buy: " + playerFour.getProbabilityToBuyOnSideOne() + "  roundnum: "+ roundNum + "  roundWinner: player " + roundWinner.getPlayerID());
-
-            System.out.println("roundNum: " + roundNum + "  roundWinner: "+ roundWinner.getPlayerID() + " p1 prob side 1: " + playerOne.getProbabilityToBuyOnSideOne() + " p1 prob side 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " p1 prob side 3: " + playerOne.getProbabilityToBuyOnSideThree() + "  p1 prob side 4: " + playerOne.getProbabilityToBuyOnSideFour() + "  p2 prob side 1: " + playerTwo.getProbabilityToBuyOnSideOne() + " p2 prob side 2: " + playerTwo.getProbabilityToBuyOnSideTwo() + " p2 prob side 3: " + playerTwo.getProbabilityToBuyOnSideThree() + " p2 prob side 4: " + playerTwo.getProbabilityToBuyOnSideFour() + " p3 prob side 1: " + playerThree.getProbabilityToBuyOnSideOne() + " p3 prob side 2: " + playerThree.getProbabilityToBuyOnSideTwo() + " p3 prob side 3: " + playerThree.getProbabilityToBuyOnSideThree() + " p3 prob side 4: " + playerThree.getProbabilityToBuyOnSideFour() + " p4 prob side 1: " + playerFour.getProbabilityToBuyOnSideOne() + " p4 prob side 2: " + playerFour.getProbabilityToBuyOnSideTwo() + " p4 prob side 3: " + playerFour.getProbabilityToBuyOnSideThree() + " p4 prob side 4: " + playerFour.getProbabilityToBuyOnSideFour() + " num wins 1: " + playerOne.getNumOfWins() + " num wins 2: " + playerTwo.getNumOfWins() + " num wins 3: " + playerThree.getNumOfWins() + " num wins 4: " + playerFour.getNumOfWins());
-            //System.out.println("P1 prob to buy: " + playerOne.getProbabilityToBuy() + "    roundNum: " + roundNum);
-
-            //System.out.println("P1 wins = " + playerOne.getNumOfWins() + " P2 wins = " + playerTwo.getNumOfWins() + " P3 wins = " + playerThree.getNumOfWins() + " P4 wins = " + playerFour.getNumOfWins());
-
-            playerOne.adjustProbabilityToBuy();
-
-            numWinsByOne = playerOne.getNumOfWins();
-            playerOne.adjustProbabilityToBuy();
-
-            //System.out.print("roundNum: " + roundNum + "  sum of wins per round: " + (playerOne.getNumOfWins() + playerTwo.getNumOfWins() + playerThree.getNumOfWins() + playerFour.getNumOfWins()));
-            //System.out.println();
+            //System.out.println("P1 averages = side1 : " + averageArraySideOne[numOfRounds - 1] + " side 2: " + averageArraySideTwo[numOfRounds - 1] + " side 3: " + averageArraySideThree[numOfRounds - 1] + " side 4: " + averageArraySideFour[numOfRounds - 1]);
+            //System.out.println("P1 cut averages = side1 : " + cutAverageArraySideOne[numOfRounds - 1] + " side 2: " + cutAverageArraySideTwo[numOfRounds - 1] + " side 3: " + cutAverageArraySideThree[numOfRounds - 1] + " side 4: " + cutAverageArraySideFour[numOfRounds - 1]);
 
 
-            probSumSideOne = probSumSideOne + playerOne.getProbabilityToBuyOnSideOne();
-            probSumSideTwo = probSumSideTwo + playerOne.getProbabilityToBuyOnSideOne();
-            probSumSideThree = probSumSideThree + playerOne.getProbabilityToBuyOnSideThree();
-            probSumSideFour = probSumSideFour + playerOne.getProbabilityToBuyOnSideFour();
 
-            averageSideOne = probSumSideOne/roundNum;
-            averageSideTwo = probSumSideTwo/roundNum;
-            averageSideThree = probSumSideThree/roundNum;
-            averageSideFour = probSumSideFour/roundNum;
-
-            averageArraySideOne[roundNum-1] = averageSideOne;
-            averageArraySideTwo[roundNum-1] = averageSideTwo;
-            averageArraySideThree[roundNum-1] = averageSideThree;
-            averageArraySideFour[roundNum-1] = averageSideFour;
-
-
-            probabilityArrayOnSideOne[roundNum-1] = playerOne.getProbabilityToBuyOnSideOne();
-            probabilityArrayOnSideTwo[roundNum-1] = playerOne.getProbabilityToBuyOnSideTwo();
-            probabilityArrayOnSideThree[roundNum-1] = playerOne.getProbabilityToBuyOnSideThree();
-            probabilityArrayOnSideFour[roundNum-1] = playerOne.getProbabilityToBuyOnSideFour();
-
-
-            if(roundNum>startingComparisonValue){
-                cutSumSideOne = cutSumSideOne + playerOne.getProbabilityToBuyOnSideOne();
-                cutSumSideTwo = cutSumSideTwo + playerOne.getProbabilityToBuyOnSideTwo();
-                cutSumSideThree = cutSumSideThree + playerOne.getProbabilityToBuyOnSideThree();
-                cutSumSideFour = cutSumSideFour + playerOne.getProbabilityToBuyOnSideFour();
-
-                cutAverageSideOne = cutSumSideOne/(roundNum-startingComparisonValue);
-                cutAverageSideTwo = cutSumSideTwo/(roundNum-startingComparisonValue);
-                cutAverageSideThree = cutSumSideThree/(roundNum-startingComparisonValue);
-                cutAverageSideFour = cutSumSideFour/(roundNum-startingComparisonValue);
-
-
-                cutAverageArraySideOne[roundNum-1] = cutAverageSideOne;
-                cutAverageArraySideTwo[roundNum-1] = cutAverageSideTwo;
-                cutAverageArraySideThree[roundNum-1] = cutAverageSideThree;
-                cutAverageArraySideFour[roundNum-1] = cutAverageSideFour;
-            }else{
-                cutAverageArraySideOne[roundNum-1] = 0;
-                cutAverageArraySideTwo[roundNum-1] = 0;
-                cutAverageArraySideThree[roundNum-1] = 0;
-                cutAverageArraySideFour[roundNum-1] = 0;
-            }
-
-            gh.adjustPlayerProbabilitiesToBuyImplementingFunnel(roundNum);
-
-        }
-
-        System.out.println("P1 averages = side1 : " + averageArraySideOne[numOfRounds-1] + " side 2: " + averageArraySideTwo[numOfRounds-1] + " side 3: " + averageArraySideThree[numOfRounds-1] + " side 4: " + averageArraySideFour[numOfRounds-1]);
-        System.out.println("P1 cut averages = side1 : " + cutAverageArraySideOne[numOfRounds-1] + " side 2: " + cutAverageArraySideTwo[numOfRounds-1] + " side 3: " + cutAverageArraySideThree[numOfRounds-1] + " side 4: " + cutAverageArraySideFour[numOfRounds-1]);
-
-
-        java.util.Date dateEnd = new Date();
-        System.out.println("Start time: " + dateStart);
-        System.out.println("End time: " + dateEnd);
 
         /*double[] averageValueProbabilityArrayOnSideOne = new double[numOfRounds];
         averageValueProbabilityArrayOnSideOne[0] = probabilityArrayOnSideOne[0];
@@ -219,21 +223,44 @@ public class MonteCarloMonopoly {
             averageValueProbabilityArrayOnSideOne[index] = averageValueProbabilityArrayOnSideOne[index-1]/index;
         }*/
 
-        gh.exportCSV(probabilityArrayOnSideOne);
+            //gh.exportCSV(probabilityArrayOnSideOne);
 
-        //gh.generateTransitionMatrix();
-        //gh.displayTransitionMatrix();
+            //gh.generateTransitionMatrix();
+            //gh.displayTransitionMatrix();
 
-        playerOne.
+            /*gh.plotAllProbabilityArrays();
+            gh.plotProbabilityArray(averageArraySideOne);
+            gh.plotProbabilityArray(averageArraySideTwo);
+            gh.plotProbabilityArray(averageArraySideThree);
+            gh.plotProbabilityArray(averageArraySideFour);
+            */
+            System.out.println(overallCount);
+            averageOverallProbabilityValueSideOne[overallCount] = playerOne.getProbabilityToBuyOnSideOne();
+            averageOverallProbabilityValueSideTwo[overallCount] = playerOne.getProbabilityToBuyOnSideTwo();
+            averageOverallProbabilityValueSideThree[overallCount] = playerOne.getProbabilityToBuyOnSideThree();
+            averageOverallProbabilityValueSideFour[overallCount] = playerOne.getProbabilityToBuyOnSideFour();
 
-        gh.plotAllProbabilityArrays();
-        gh.plotProbabilityArray(averageArraySideOne);
-        gh.plotProbabilityArray(averageArraySideTwo);
-        gh.plotProbabilityArray(averageArraySideThree);
-        gh.plotProbabilityArray(averageArraySideFour);
+        }
+        java.util.Date dateEnd = new Date();
+        System.out.println("Start time: " + dateStart);
+        System.out.println("End time: " + dateEnd);
 
+        for(int i = 0;i<totalruns;i++){
+            System.out.print(averageOverallProbabilityValueSideOne[i] + " ");
+        }
+        System.out.println();
+        for(int i = 0;i<totalruns;i++){
+            System.out.print(averageOverallProbabilityValueSideTwo[i] + " ");
+        }
+        System.out.println();
+        for(int i = 0;i<totalruns;i++){
+            System.out.print(averageOverallProbabilityValueSideThree[i] + " ");
+        }
+        System.out.println();
+        for(int i = 0;i<totalruns;i++){
+            System.out.print(averageOverallProbabilityValueSideFour[i] + " ");
+        }
     }
-
 
 
     public State getStateObject(){ return state; }
