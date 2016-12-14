@@ -71,22 +71,47 @@ A Markov Chain is a stochastic process that is composed by a set of states that 
     \label{example_markov_chain}
 \end{figure}
 
-A Markov Chain can be envisioned as a group of points on a graph, called \textit{states} each state has \textit{transition probabilities} associated with it that will dictate the probability of transitioning from the current state to the specific state.  For example,  $p_{ij}$ would be the probability to go from state \textit{i} to state \textit{j}.  All of these probabilities are part of a \textit{Transition Matrix}, P where:
+A Markov Chain can be envisioned as a group of points on a graph, called \textit{states} each state has \textit{transition probabilities} associated with it that will dictate the probability of transitioning from the current state to the specific state.  For example,  $p_{i,j}$ would be the probability to go from state \textit{i} to state \textit{j}.  All of these probabilities are part of a \textit{Transition Matrix}, P where:
 
 $$
 P=
 \begin{bmatrix}
-p_{00} & p_{01} & p_{02} & ... & p_{0j}\\
-p_{10} & p_{11} & p_{12} & ... & p_{1j}\\
-p_{20} & p_{21} & p_{22} & ... & p_{2j}\\
+p_{0,0} & p_{0,1} & p_{0,2} & ... & p_{,0j}\\
+p_{1,0} & p_{1,1} & p_{1,2} & ... & p_{1,j}\\
+p_{2,0} & p_{2,1} & p_{2,2} & ... & p_{2,j}\\
 ... & ... & ... & ... & ...\\
-p_{i0} & p_{i1} & p_{i2} & ... & p_{ij}
+p_{i,0} & p_{i,1} & p_{i,2} & ... & p_{i,j}
 \end{bmatrix}
 $$
 
-At a high-level, a \textit{finite-state machine} is a model used for software design that, as the name implies, assumes a that the program will have a finite amount of states and that it will only be in one state at a time.  For example, if someone needed to model the movement of a door then that person could define the entire system of the door as a finite-state machine with only two states: the door is open or the door is closed.  And then there is some sort of function or method that will cause the finite-state machine to switch states.  In this example, when the door is in the closed state it would most likely have an \textit{open_door()} method and the opened state would have a corresponding \textit{close_door()} method.
+At a high-level, a \textit{finite-state machine} is a model used for software design that, as the name implies, assumes a that the program will have a finite amount of states and that it will only be in one state at a time.  For example, if someone needed to model the movement of a door then that person could define the entire system of the door as a finite-state machine with only two states: the door is open or the door is closed.  And then there is some sort of function or method that will cause the finite-state machine to switch states.  In this example, when the door is in the closed state it would most likely have an open door method and the opened state would have a corresponding close door method.
 
-Relating these two topics back to \textit{Monopoly}
+We can think of the \textit{Monopoly} board as a finite-state machine.  The first step is to define each property on the board to be a state, giving a finite total of forty states.  A player moves between two to twelve spaces away from where they are currently positioned on the board.  This fits with the definition of \textit{memorylessness} because the state the player is going to move to depends only on their current position.  From there, we can extend this to a finite-state machine because at no time can a player be on more than one state.
+
+Finally, the transition matrix, P, must be defined.  P will be in the form:
+
+$$
+P=
+\begin{bmatrix}
+p_{0,0} & p_{0,1} & p_{0,2} & ... & p_{0,40}\\
+p_{1,0} & p_{1,1} & p_{1,2} & ... & p_{1,40}\\
+p_{2,0} & p_{2,1} & p_{2,2} & ... & p_{2,40}\\
+... & ... & ... & ... & ...\\
+p_{40,0} & p_{40,1} & p_{40,2} & ... & p_{40,40}
+\end{bmatrix}
+$$
+
+To give values for each $p_{i,j}$ we have to consider the expected outcomes when two dice are rolled.  The probabilities of getting a specific outcome on the dice roll can be show in an array with the probability, $p_i$, of rolling the value of i, i = 1,2,...,12.
+
+$$
+\setcounter{MaxMatrixCols}{20}
+p=
+\begin{bmatrix}
+0&\frac{1}{36}&\frac{1}{18}&\frac{1}{12}&\frac{1}{9}&\frac{5}{36}&\frac{1}{6}&\frac{5}{36}&\frac{1}{9}&\frac{1}{12}&\frac{1}{18}&\frac{1}{36}\\
+\end{bmatrix}
+$$
+
+Using these probabilities we can create a 40x40 transition matrix for our board.  One glaring difference is on index $i = 30$, this index indicates the Go to Jail space and will always have a probability of zero.  To offset this, the Jail space will always gain that corresponding transition probability to simulate the action of moving the pawn to the jail space.  Now on to the simulation itself.
 
 \subsection{Bringing It All Together}
 
@@ -102,6 +127,10 @@ Once a round is complete whichever player has the most wins is deemed the round 
 \end{equation}
 
 Where $\alpha_i$ is a constant that will be varied when the simulation is ran multiple times.
+
+This encompasses a single simulation, but in the spirit of Monte Carlo methods, we cannot stop at just one simulation.  Each simulation is run thirty times and the final value for the buying probability for the four sides is saved in their own array.  The average of value over that array is used as a general average for that side.
+
+Initially players two, three, and four have a buying probability between zero and one.  Once an average is found, we start to narrow this window considerably.  The first
 
 \begin{center}
 \includegraphics[width = \textwidth]{average}
