@@ -16,9 +16,9 @@ public class MonteCarloMonopoly {
     static GameHelper gh = new GameHelper();
 
     static int numberOfGames = 1000;
-    static int numOfRounds = 40000;
+    static int numOfRounds = 6000;
+    static int overallRuns = 30;
     static int startingComparisonValue = 3000;
-    static int totalruns = 100;
     static double[] probabilityArrayOnSideOne = new double[numOfRounds];
     static double[] probabilityArrayOnSideTwo = new double[numOfRounds];
     static double[] probabilityArrayOnSideThree = new double[numOfRounds];
@@ -33,10 +33,10 @@ public class MonteCarloMonopoly {
     static double[] cutAverageArraySideTwo = new double[numOfRounds];
     static double[] cutAverageArraySideThree = new double[numOfRounds];
     static double[] cutAverageArraySideFour = new double[numOfRounds];
-    static double[] averageOverallProbabilityValueSideOne = new double[totalruns];
-    static double[] averageOverallProbabilityValueSideTwo = new double[totalruns];
-    static double[] averageOverallProbabilityValueSideThree = new double[totalruns];
-    static double[] averageOverallProbabilityValueSideFour = new double[totalruns];
+    static double[] overallAverageArraySideOne = new double[overallRuns];
+    static double[] overallAverageArraySideTwo = new double[overallRuns];
+    static double[] overallAverageArraySideThree = new double[overallRuns];
+    static double[] overallAverageArraySideFour = new double[overallRuns];
 
 
     public static void main(String[] args) throws Exception {
@@ -58,8 +58,7 @@ public class MonteCarloMonopoly {
 
 
         java.util.Date dateStart = new Date();
-
-        for (int overallCount = 0; overallCount < totalruns; overallCount++) {
+        for(int count = 0; count<overallRuns;count++) {
             for (int roundNum = 1; roundNum <= numOfRounds; roundNum++) {
                 //System.out.println("-------------------------  Round Number: " + roundNum + "  -------------------------");
                 previousRoundNumWinsByOne = numWinsByOne;
@@ -68,9 +67,6 @@ public class MonteCarloMonopoly {
                 playerTwo.resetNumPlayerWins();
                 playerThree.resetNumPlayerWins();
                 playerFour.resetNumPlayerWins();
-                playerTwo.randomizeProbabilityToBuyOnEachSide();
-                playerThree.randomizeProbabilityToBuyOnEachSide();
-                playerFour.randomizeProbabilityToBuyOnEachSide();
 
                 for (int n = 1; n <= numberOfGames; n++) {
                     //System.out.println("%%%%%%%%%%  Game Number " + n + " %%%%%%%%%%");
@@ -152,7 +148,7 @@ public class MonteCarloMonopoly {
 
                 //System.out.println("P1 wins = " + playerOne.getNumOfWins() + " P2 wins = " + playerTwo.getNumOfWins() + " P3 wins = " + playerThree.getNumOfWins() + " P4 wins = " + playerFour.getNumOfWins());
 
-                playerOne.adjustProbabilityToBuy();
+                //System.out.println("round: " + roundNum + " prob 1: " + playerOne.getProbabilityToBuyOnSideOne() + " prob 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " prob 3: " + playerOne.getProbabilityToBuyOnSideThree() + " prob 4: " + playerOne.getProbabilityToBuyOnSideFour());
 
                 numWinsByOne = playerOne.getNumOfWins();
                 playerOne.adjustProbabilityToBuy();
@@ -210,6 +206,14 @@ public class MonteCarloMonopoly {
 
             }
 
+            System.out.println("prob 1: " + playerOne.getProbabilityToBuyOnSideOne() + " prob 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " prob 3: " + playerOne.getProbabilityToBuyOnSideThree() + " prob 4: " + playerOne.getProbabilityToBuyOnSideFour());
+            overallAverageArraySideOne[count] = playerOne.getProbabilityToBuyOnSideOne();
+            overallAverageArraySideTwo[count] = playerOne.getProbabilityToBuyOnSideTwo();
+            overallAverageArraySideThree[count] = playerOne.getProbabilityToBuyOnSideThree();
+            overallAverageArraySideFour[count] = playerOne.getProbabilityToBuyOnSideFour();
+
+            System.out.println(count);
+
             //System.out.println("P1 averages = side1 : " + averageArraySideOne[numOfRounds - 1] + " side 2: " + averageArraySideTwo[numOfRounds - 1] + " side 3: " + averageArraySideThree[numOfRounds - 1] + " side 4: " + averageArraySideFour[numOfRounds - 1]);
             //System.out.println("P1 cut averages = side1 : " + cutAverageArraySideOne[numOfRounds - 1] + " side 2: " + cutAverageArraySideTwo[numOfRounds - 1] + " side 3: " + cutAverageArraySideThree[numOfRounds - 1] + " side 4: " + cutAverageArraySideFour[numOfRounds - 1]);
 
@@ -228,38 +232,33 @@ public class MonteCarloMonopoly {
             //gh.generateTransitionMatrix();
             //gh.displayTransitionMatrix();
 
-            /*gh.plotAllProbabilityArrays();
+            //gh.plotAllProbabilityArrays();
+            /*
             gh.plotProbabilityArray(averageArraySideOne);
             gh.plotProbabilityArray(averageArraySideTwo);
             gh.plotProbabilityArray(averageArraySideThree);
             gh.plotProbabilityArray(averageArraySideFour);
             */
-            System.out.println(overallCount);
-            averageOverallProbabilityValueSideOne[overallCount] = playerOne.getProbabilityToBuyOnSideOne();
-            averageOverallProbabilityValueSideTwo[overallCount] = playerOne.getProbabilityToBuyOnSideTwo();
-            averageOverallProbabilityValueSideThree[overallCount] = playerOne.getProbabilityToBuyOnSideThree();
-            averageOverallProbabilityValueSideFour[overallCount] = playerOne.getProbabilityToBuyOnSideFour();
+        }
 
+        for(int i = 0; i < overallRuns;i++){
+            System.out.print(overallAverageArraySideOne[i] + " ");
+        }
+        System.out.println();
+        for(int i = 0; i < overallRuns;i++){
+            System.out.print(overallAverageArraySideTwo[i] + " ");
+        }
+        System.out.println();
+        for(int i = 0; i < overallRuns;i++){
+            System.out.print(overallAverageArraySideThree[i] + " ");
+        }
+        System.out.println();
+        for(int i = 0; i < overallRuns;i++){
+            System.out.print(overallAverageArraySideFour[i] + " ");
         }
         java.util.Date dateEnd = new Date();
         System.out.println("Start time: " + dateStart);
         System.out.println("End time: " + dateEnd);
-
-        for(int i = 0;i<totalruns;i++){
-            System.out.print(averageOverallProbabilityValueSideOne[i] + " ");
-        }
-        System.out.println();
-        for(int i = 0;i<totalruns;i++){
-            System.out.print(averageOverallProbabilityValueSideTwo[i] + " ");
-        }
-        System.out.println();
-        for(int i = 0;i<totalruns;i++){
-            System.out.print(averageOverallProbabilityValueSideThree[i] + " ");
-        }
-        System.out.println();
-        for(int i = 0;i<totalruns;i++){
-            System.out.print(averageOverallProbabilityValueSideFour[i] + " ");
-        }
     }
 
 

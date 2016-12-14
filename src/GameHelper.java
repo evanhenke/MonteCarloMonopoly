@@ -121,32 +121,35 @@ public class GameHelper {
     }
 
     public void adjustPlayerProbabilitiesToBuyImplementingFunnel(int roundNum){
-        int numOfRounds = game.getNumOfRounds();
-        if(roundNum < 1000) {
+
+         adjustProbabilitiesWithFunnelAroundGivenAverageValue(.2);
+
+
+        /*if(roundNum < 1000) {
             adjustProbabilitiesBeforeFunnel();
+        }else if(roundNum >= 1000 && roundNum < 2000){
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.6);
+        }else if(roundNum >= 2000 && roundNum < 3000) {
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.5);
         }else if(roundNum >= 3000 && roundNum < 4000){
-            adjustProbabilitiesWithFunnelOfSize(.4,roundNum);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.4);
         }else if(roundNum >= 4000 && roundNum < 5000){
-            adjustProbabilitiesWithFunnelOfSize(.3,roundNum);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.3);
         }else if(roundNum >= 5000 && roundNum < 6000){
-            adjustProbabilitiesWithFunnelOfSize(.2,roundNum);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.2);
         }else if(roundNum >= 6000 && roundNum < 7000){
-            adjustProbabilitiesWithFunnelOfSize(.1,roundNum);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.1);
         }else if(roundNum >= 7000 && roundNum < 8000){
-            adjustProbabilitiesWithFunnelOfSize(.075,roundNum);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.075);
         }else if(roundNum >= 8000 && roundNum < 9000){
-            adjustProbabilitiesWithFunnelOfSize(.05,roundNum);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.05);
         }else if(roundNum >= 9000 && roundNum < 10000){
-            adjustProbabilitiesWithFunnelOfSize(.025,roundNum);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.025);
         }else if(roundNum >= 10000 && roundNum < 11000){
-            adjustProbabilitiesWithFunnelOfSize(.01,roundNum);
-        }else if(roundNum >= 11000 && roundNum < 12000){
-            adjustProbabilitiesWithFunnelOfSize(.005,roundNum);
-        }else if(roundNum >= 12000 && roundNum < 13000){
-            adjustProbabilitiesWithFunnelOfSize(.001,roundNum);
-        }else{
-            adjustProbabilitiesWithFunnelOfSize(.0005,roundNum);
-        }
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.01);
+        }else {
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.005);
+        }*/
     }
 
     public void adjustProbabilitiesBeforeFunnel(){
@@ -181,6 +184,44 @@ public class GameHelper {
             //System.out.println("oneMin: " + oneMin + " and oneMax: " + oneMax + " twoMin: " + twoMin + " twoMax: " + twoMax + " threeMin: " + threeMin + " threeMax: " + threeMax + " fourMin: " + fourMin + " fourMax: " + fourMax);
             //System.out.println("Player 2 prob to buy on side 1: " + game.getPlayerByID(2).getProbabilityToBuyOnSideOne() + " side 2: " + game.getPlayerByID(2).getProbabilityToBuyOnSideTwo() + " side 3: " + game.getPlayerByID(2).getProbabilityToBuyOnSideThree() + " side 4: " + game.getPlayerByID(2).getProbabilityToBuyOnSideFour());
         }
+    }
+
+    public void adjustProbabilitiesWithFunnelAroundGivenAverageValue(double windowSize){
+        double value1=0.860462447;
+        double value2=0.898130494;
+        double value3=0.914810143;
+        double value4=0.8978265;
+
+        double oneMin = checkForValidProbability(value1 - windowSize/2);
+        double oneMax = checkForValidProbability(value1 + windowSize/2);
+        double twoMin = checkForValidProbability(value2 - windowSize/2);
+        double twoMax = checkForValidProbability(value2 + windowSize/2);
+        double threeMin = checkForValidProbability(value3 - windowSize/2);
+        double threeMax = checkForValidProbability(value3 + windowSize/2);
+        double fourMin = checkForValidProbability(value4 - windowSize/2);
+        double fourMax = checkForValidProbability(value4 + windowSize/2);
+
+        game.getPlayerByID(2).randomizeProbabilityToBuyOnSpecificSideInRange(oneMin,oneMax,1);
+        game.getPlayerByID(2).randomizeProbabilityToBuyOnSpecificSideInRange(twoMin,twoMax,2);
+        game.getPlayerByID(2).randomizeProbabilityToBuyOnSpecificSideInRange(threeMin,threeMax,3);
+        game.getPlayerByID(2).randomizeProbabilityToBuyOnSpecificSideInRange(fourMin,fourMax,4);
+        game.getPlayerByID(3).randomizeProbabilityToBuyOnSpecificSideInRange(oneMin,oneMax,1);
+        game.getPlayerByID(3).randomizeProbabilityToBuyOnSpecificSideInRange(twoMin,twoMax,2);
+        game.getPlayerByID(3).randomizeProbabilityToBuyOnSpecificSideInRange(threeMin,threeMax,3);
+        game.getPlayerByID(3).randomizeProbabilityToBuyOnSpecificSideInRange(fourMin,fourMax,4);
+        game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(oneMin,oneMax,1);
+        game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(twoMin,twoMax,2);
+        game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(threeMin,threeMax,3);
+        game.getPlayerByID(4).randomizeProbabilityToBuyOnSpecificSideInRange(fourMin,fourMax,4);
+    }
+
+    public double checkForValidProbability(double num){
+        if (num > 1){
+            num = 1;
+        }else if (num < 0){
+            num = 0;
+        }
+        return num;
     }
 
     public double[][] generateTransitionMatrix(){
@@ -369,16 +410,16 @@ public class GameHelper {
         }
 
         plot1.addPlot(array1);
-        plot1.addPlot(array5);
+        //plot1.addPlot(array5);
         plot1.plot();
         plot2.addPlot(array2);
-        plot2.addPlot(array6);
+        //plot2.addPlot(array6);
         plot2.plot();
         plot3.addPlot(array3);
-        plot3.addPlot(array7);
+        //plot3.addPlot(array7);
         plot3.plot();
         plot4.addPlot(array4);
-        plot4.addPlot(array8);
+        //plot4.addPlot(array8);
         plot4.plot();
     }
 
