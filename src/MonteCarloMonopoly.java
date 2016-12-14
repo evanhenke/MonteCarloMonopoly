@@ -16,8 +16,8 @@ public class MonteCarloMonopoly {
     static GameHelper gh = new GameHelper();
 
     static int numberOfGames = 1000;
-    static int numOfRounds = 6000;
-    static int overallRuns = 30;
+    static int numOfRounds = 50000;
+    static int overallRuns = 1;
     static int startingComparisonValue = 3000;
     static double[] probabilityArrayOnSideOne = new double[numOfRounds];
     static double[] probabilityArrayOnSideTwo = new double[numOfRounds];
@@ -59,6 +59,7 @@ public class MonteCarloMonopoly {
 
         java.util.Date dateStart = new Date();
         for(int count = 0; count<overallRuns;count++) {
+            playerOne.setProbabilityToBuyOnAllSides(0.5);
             for (int roundNum = 1; roundNum <= numOfRounds; roundNum++) {
                 //System.out.println("-------------------------  Round Number: " + roundNum + "  -------------------------");
                 previousRoundNumWinsByOne = numWinsByOne;
@@ -148,7 +149,7 @@ public class MonteCarloMonopoly {
 
                 //System.out.println("P1 wins = " + playerOne.getNumOfWins() + " P2 wins = " + playerTwo.getNumOfWins() + " P3 wins = " + playerThree.getNumOfWins() + " P4 wins = " + playerFour.getNumOfWins());
 
-                //System.out.println("round: " + roundNum + " prob 1: " + playerOne.getProbabilityToBuyOnSideOne() + " prob 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " prob 3: " + playerOne.getProbabilityToBuyOnSideThree() + " prob 4: " + playerOne.getProbabilityToBuyOnSideFour());
+                System.out.println("round: " + roundNum + " prob 1: " + playerOne.getProbabilityToBuyOnSideOne() + " prob 2: " + playerOne.getProbabilityToBuyOnSideTwo() + " prob 3: " + playerOne.getProbabilityToBuyOnSideThree() + " prob 4: " + playerOne.getProbabilityToBuyOnSideFour());
 
                 numWinsByOne = playerOne.getNumOfWins();
                 playerOne.adjustProbabilityToBuy();
@@ -232,7 +233,7 @@ public class MonteCarloMonopoly {
             //gh.generateTransitionMatrix();
             //gh.displayTransitionMatrix();
 
-            //gh.plotAllProbabilityArrays();
+            gh.plotAllProbabilityArrays();
             /*
             gh.plotProbabilityArray(averageArraySideOne);
             gh.plotProbabilityArray(averageArraySideTwo);

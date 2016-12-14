@@ -122,33 +122,34 @@ public class GameHelper {
 
     public void adjustPlayerProbabilitiesToBuyImplementingFunnel(int roundNum){
 
-         adjustProbabilitiesWithFunnelAroundGivenAverageValue(.2);
+        adjustProbabilitiesBeforeFunnel();
+        //adjustProbabilitiesWithFunnelAroundGivenAverageValue(1);
 
-
-        /*if(roundNum < 1000) {
+/*
+        if(roundNum < 1000) {
             adjustProbabilitiesBeforeFunnel();
         }else if(roundNum >= 1000 && roundNum < 2000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.6);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.9);
         }else if(roundNum >= 2000 && roundNum < 3000) {
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.5);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.8);
         }else if(roundNum >= 3000 && roundNum < 4000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.4);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.7);
         }else if(roundNum >= 4000 && roundNum < 5000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.3);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.6);
         }else if(roundNum >= 5000 && roundNum < 6000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.2);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.5);
         }else if(roundNum >= 6000 && roundNum < 7000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.1);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.4);
         }else if(roundNum >= 7000 && roundNum < 8000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.075);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.3);
         }else if(roundNum >= 8000 && roundNum < 9000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.05);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.2);
         }else if(roundNum >= 9000 && roundNum < 10000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.025);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.1);
         }else if(roundNum >= 10000 && roundNum < 11000){
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.01);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.05);
         }else {
-            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.005);
+            adjustProbabilitiesWithFunnelAroundGivenAverageValue(.01);
         }*/
     }
 
@@ -187,10 +188,10 @@ public class GameHelper {
     }
 
     public void adjustProbabilitiesWithFunnelAroundGivenAverageValue(double windowSize){
-        double value1=0.860462447;
-        double value2=0.898130494;
-        double value3=0.914810143;
-        double value4=0.8978265;
+        double value1=0.8070064926;
+        double value2=0.8724212375;
+        double value3=0.8924102123;
+        double value4=0.8727648635;
 
         double oneMin = checkForValidProbability(value1 - windowSize/2);
         double oneMax = checkForValidProbability(value1 + windowSize/2);

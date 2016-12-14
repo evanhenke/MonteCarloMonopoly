@@ -84,6 +84,13 @@ public class Player {
         }
     }
 
+    public void setProbabilityToBuyOnAllSides(double prob){
+        probabilityToBuyOnSideOne = prob;
+        probabilityToBuyOnSideTwo = prob;
+        probabilityToBuyOnSideThree = prob;
+        probabilityToBuyOnSideFour = prob;
+    }
+
     public boolean isPlaying(){ return isPlaying; }
 
     public boolean isInFavoredState(int indexOnBoard){
