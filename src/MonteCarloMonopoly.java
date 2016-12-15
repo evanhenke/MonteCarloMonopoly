@@ -16,7 +16,7 @@ public class MonteCarloMonopoly {
     static GameHelper gh = new GameHelper();
 
     static int numberOfGames = 1000;
-    static int numOfRounds = 150000;
+    static int numOfRounds = 200000;
     static int overallRuns = 30;
     static int startingComparisonValue = 3000;
     static double[] probabilityArrayOnSideOne = new double[numOfRounds];

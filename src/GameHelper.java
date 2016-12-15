@@ -122,8 +122,8 @@ public class GameHelper {
 
     public void adjustPlayerProbabilitiesToBuyImplementingFunnel(int roundNum){
 
-        adjustProbabilitiesBeforeFunnel();
-        //adjustProbabilitiesWithFunnelAroundGivenAverageValue(1);
+        //adjustProbabilitiesBeforeFunnel();
+        adjustProbabilitiesWithFunnelAroundGivenAverageValue(.2);
 
 /*
         if(roundNum < 1000) {
