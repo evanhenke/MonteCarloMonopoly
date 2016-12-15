@@ -21,7 +21,7 @@ public class Player {
     private double probabilityToBuyOfTheWinnerOnSideTwo;
     private double probabilityToBuyOfTheWinnerOnSideThree;
     private double probabilityToBuyOfTheWinnerOnSideFour;
-    private static double ai = 0.99;
+    private static double ai = 0.999;
 
     GameHelper gh = new GameHelper();
     double[][] transitionMatrix = gh.generateTransitionMatrix();
