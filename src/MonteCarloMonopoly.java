@@ -16,8 +16,8 @@ public class MonteCarloMonopoly {
     static GameHelper gh = new GameHelper();
 
     static int numberOfGames = 1000;
-    static int numOfRounds = 200000;
-    static int overallRuns = 30;
+    static int numOfRounds = 15000;
+    static int overallRuns = 20;
     static int startingComparisonValue = 3000;
     static double[] probabilityArrayOnSideOne = new double[numOfRounds];
     static double[] probabilityArrayOnSideTwo = new double[numOfRounds];
@@ -260,6 +260,7 @@ public class MonteCarloMonopoly {
         java.util.Date dateEnd = new Date();
         System.out.println("Start time: " + dateStart);
         System.out.println("End time: " + dateEnd);
+        System.out.println("centered around .6");
     }
 
 

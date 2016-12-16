@@ -9,7 +9,8 @@ public class Player {
     private int previousState = 0;
     private int currentSideOfBoard = 1;
     private boolean isPlaying = true;
-    private int money = 1200;
+    private int startingMoney = 1200;
+    private int money = startingMoney;
     private int favoredSide;
     private double probabilityToBuyOnSideOne;
     private double probabilityToBuyOnSideTwo;
@@ -21,7 +22,7 @@ public class Player {
     private double probabilityToBuyOfTheWinnerOnSideTwo;
     private double probabilityToBuyOfTheWinnerOnSideThree;
     private double probabilityToBuyOfTheWinnerOnSideFour;
-    private static double ai = 0.999;
+    private static double ai = 0.99;
 
     GameHelper gh = new GameHelper();
     double[][] transitionMatrix = gh.generateTransitionMatrix();
@@ -154,7 +155,7 @@ public class Player {
 
     public void resetPlayer(){
         isPlaying = true;
-        money = 1200;
+        money = startingMoney;
         numPropertiesOwned = 0;
     }
 

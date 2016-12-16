@@ -188,10 +188,10 @@ public class GameHelper {
     }
 
     public void adjustProbabilitiesWithFunnelAroundGivenAverageValue(double windowSize){
-        double value1=0.8070064926;
-        double value2=0.8724212375;
-        double value3=0.8924102123;
-        double value4=0.8727648635;
+        double value1=0.55;
+        double value2=0.6;
+        double value3=0.65;
+        double value4=0.6;
 
         double oneMin = checkForValidProbability(value1 - windowSize/2);
         double oneMax = checkForValidProbability(value1 + windowSize/2);
